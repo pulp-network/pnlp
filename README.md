@@ -10,7 +10,17 @@ Write and publish on the open web. Assemble a following and earn money from your
 
 Your authorship stands alone without editorial oversight, restrictive platform policies, or government censorship.
 
+Your content is yours; transferrable between client implementations and monetizable directly to you in perpetuity. 
+
+### For Front-End Clients
+
+Building a better experience for authors and/or subscribers?  When authors convert to you, you can access all their old content too.
+
+Share in the monetization of publishing.  Set your rates or let the author set them.  Let authors or subscribers contribute to your service directly.
+
 ### For subscribers
+
+A better experience for authors leads to more and better content for subscribers.
 
 Browse the best writing on the open web. Support the authors you value most. Subscribe for convenience.
 
@@ -24,7 +34,7 @@ Browse the best writing on the open web. Support the authors you value most. Sub
 - the browser application integrates with metamask to allow an "author" to sign an ethereum transaction (which includes a Submission's ipfs address) with their private wallet keys
 - the browser application integrates with an IPFS gateway to allow the app to publish a Submission to IPFS; candidates: 3Box, Textile, Filecoin account?
 - submissions are formatted as RSS-compliant files to enable all RSS clients out of the box
-- readers can donate to a specific post to keep it persisted
+- readers can donate to a specific post to contribute to the author and/or to keep the content itself persisted
 
 ### Proposed v2 Roadmap
 

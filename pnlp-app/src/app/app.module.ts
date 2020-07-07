@@ -3,17 +3,16 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { AuthModule } from '@app/auth';
 import { CoreModule } from '@core';
 import { environment } from '@env/environment';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared';
-import { AboutModule } from './about/about.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeModule } from './home/home.module';
 import { LayoutModule } from './layout/layout.module';
+import { UserModule } from './user';
 
 @NgModule({
   imports: [
@@ -26,8 +25,7 @@ import { LayoutModule } from './layout/layout.module';
     CoreModule,
     SharedModule,
     HomeModule,
-    AboutModule,
-    AuthModule,
+    UserModule,
     LayoutModule,
     AppRoutingModule, // must be imported as the last module as it contains the fallback route
   ],

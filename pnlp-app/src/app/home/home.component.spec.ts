@@ -1,10 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CoreModule } from '@core';
 import { SharedModule } from '@shared';
 import { HomeComponent } from './home.component';
-import { QuoteService } from './quote.service';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -14,7 +12,7 @@ describe('HomeComponent', () => {
     TestBed.configureTestingModule({
       imports: [CoreModule, SharedModule, HttpClientTestingModule],
       declarations: [HomeComponent],
-      providers: [QuoteService],
+      providers: [],
     }).compileComponents();
   }));
 

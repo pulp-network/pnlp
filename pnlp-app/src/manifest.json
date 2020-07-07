@@ -1,6 +1,6 @@
 {
-  "name": "ngX-Rocket",
-  "short_name": "ngX-Rocket",
+  "name": "pnlp",
+  "short_name": "pnlp",
   "theme_color": "#488aff",
   "background_color": "#488aff",
   "scope": "/",
@@ -8,13 +8,13 @@
   "display": "standalone",
   "icons": [
     {
-      "src": "assets/ngx-rocket-logo.png",
+      "src": "assets/pnlp-logo.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "assets/ngx-rocket-logo@192.png",
-      "sizes": "192x192",
+      "src": "assets/pnlp-logo@190.png",
+      "sizes": "190x190",
       "type": "image/png"
     }
   ]

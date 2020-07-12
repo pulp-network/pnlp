@@ -1,0 +1,46 @@
+<div class="lead">
+  Start a Publication
+</div>
+<div class="">
+  this is a space that cannot be censored, overwritten, or modified by anyone but you.
+</div>
+<form>
+  <div class="form-group">
+    <label for="publication-name">Publication Name</label>
+    <input
+      type="text"
+      class="form-control"
+      name="publication-name"
+      id="publication-name"
+      placeholder="E.g. 'The Decentralized Times'"
+      [(ngModel)]="name"
+    />
+  </div>
+  <div class="form-group">
+    <label for="publication-description">What's it about?</label>
+    <input
+      type="text"
+      class="form-control"
+      name="publication-description"
+      id="publication-description"
+      placeholder="E.g. 'Happenings in the wild world of web3'"
+      [(ngModel)]="description"
+    />
+  </div>
+  <div class="form-group">
+    <label for="publication-domain">Domain</label>
+    <input
+      type="text"
+      class="form-control"
+      name="publication-domain"
+      id="publication-domain"
+      placeholder="web3"
+      [(ngModel)]="subdomain"
+    />
+  </div>
+  <div class="text-right">
+    <button type="submit" class="btn btn-primary" (click)="createPublication()">Continue</button>
+  </div>
+
+  {{ links | json }}
+</form>

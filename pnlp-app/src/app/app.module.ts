@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeModule } from './home/home.module';
 import { LayoutModule } from './layout/layout.module';
+import { PublisherModule } from './publisher/publisher.module';
 import { UserModule } from './user';
 
 @NgModule({
@@ -24,10 +25,11 @@ import { UserModule } from './user';
     NgbModule,
     CoreModule,
     SharedModule,
+    PublisherModule,
     HomeModule,
     UserModule,
     LayoutModule,
-    AppRoutingModule, // must be imported as the last module as it contains the fallback route
+    AppRoutingModule,
   ],
   declarations: [AppComponent],
   providers: [],

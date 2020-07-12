@@ -19,6 +19,9 @@
     "postinstall": "npm run prettier -s",
     "generate": "ng generate"
   },
+  "browser": {
+    "crypto": false
+  },
   "dependencies": {
     "@angular/animations": "^9.1.9",
     "@angular/common": "^9.1.9",
@@ -33,6 +36,8 @@
     "@fortawesome/fontawesome-free": "^5.1.0",
     "@ng-bootstrap/ng-bootstrap": "^6.0.2",
     "@ngx-translate/core": "^12.0.0",
+    "@textile/hub": "^0.3.3",
+    "@textile/threads-core": "^0.1.30",
     "bootstrap": "^4.1.1",
     "ethers": "^5.0.4",
     "rxjs": "^6.5.5",

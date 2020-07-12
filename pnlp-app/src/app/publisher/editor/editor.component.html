@@ -1,0 +1,50 @@
+<form>
+  <div class="form-group">
+    <label for="submission-title">Title</label>
+    <input
+      type="text"
+      class="form-control"
+      name="submission-title"
+      id="submission-title"
+      placeholder="Submission Title..."
+      [(ngModel)]="title"
+    />
+  </div>
+  <div class="form-group">
+    <label for="submission-index">Index</label>
+    <input
+      type="text"
+      class="form-control"
+      name="submission-index"
+      id="submission-index"
+      placeholder="submission-title"
+      [(ngModel)]="index"
+    />
+  </div>
+  <div class="form-group">
+    <label for="submission-subtitle">Subtitle</label>
+    <input
+      type="text"
+      class="form-control"
+      name="submission-subtitle"
+      id="submission-subtitle"
+      placeholder="Submission Subtitle..."
+      [(ngModel)]="subtitle"
+    />
+  </div>
+  <div class="form-group">
+    <label for="submission-content">Content</label>
+    <textarea
+      class="form-control"
+      name="submission-content"
+      id="submission-content"
+      rows="12"
+      [(ngModel)]="content"
+    ></textarea>
+  </div>
+  <div class="text-right">
+    <button type="submit" class="btn btn-primary" (click)="publish()">Publish</button>
+  </div>
+
+  {{ links | json }}
+</form>

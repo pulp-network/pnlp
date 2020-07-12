@@ -1,0 +1,15 @@
+<div>
+  <h2>
+    {{ (article$ | async)?.content?.title }}
+  </h2>
+  <h4>
+    {{ (article$ | async)?.content?.subtitle }}
+  </h4>
+  <p>
+    {{ (article$ | async)?.content?.body }}
+  </p>
+</div>
+
+<div *ngIf="error" class="alert alert-danger" role="alert">
+  {{ error }}
+</div>

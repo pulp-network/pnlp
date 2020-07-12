@@ -1,0 +1,26 @@
+<div>
+  <h2>
+    {{ (articleList$ | async)?.publication?.metadata?.name }}
+  </h2>
+</div>
+
+<div class="list-group" *ngIf="!error">
+  <a
+    *ngFor="let article of (articleList$ | async)?.article_refs"
+    class="list-group-item list-group-item-action"
+    [routerLink]="[article.name]"
+  >
+    <div class="d-flex w-100 justify-content-between">
+      <span>
+        {{ article?.name }}
+      </span>
+      <small> CID: {{ article?.cid }} </small>
+    </div>
+  </a>
+</div>
+
+{{ articleList$ | async | json }}
+
+<div *ngIf="error" class="alert alert-danger" role="alert">
+  {{ error }}
+</div>

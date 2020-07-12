@@ -1,0 +1,101 @@
+import { Injectable } from '@angular/core';
+import { LinksReply, ListPathItem } from '@textile/buckets-grpc/buckets_pb';
+import { Article, ArticleValidator } from '../../model/Article';
+import { Publication, PublicationValidator } from '../../model/Publication';
+import { Validator } from '../../model/Validator';
+import { PersistenceService } from '../persistence/persistence.service';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PublicationService {
+  private static INDEX_FILENAME = 'index.json';
+  private static RESERVED_NAMES = ['.textileseed'];
+  private static ROOT = '/';
+
+  //TODO:11 convert this into subscriber pattern
+  // where to store mapping between subdomains and IPNS?
+  private knownPublications: Map<string, LinksReply.AsObject> = new Map();
+
+  constructor(private persistenceService: PersistenceService) {}
+
+  public async createPublication(publication: Publication) {
+    Validator.throwIfInvalid(publication, PublicationValidator);
+    console.debug(`creating a new publication: ${JSON.stringify(publication.metadata)}; at ${publication.subdomain}`);
+    const links = await this.persistenceService.writeData(
+      `${publication.subdomain}/${PublicationService.INDEX_FILENAME}`,
+      publication
+    );
+    this.knownPublications.set(publication.subdomain, links);
+    return links;
+  }
+
+  public async createArticle(publication_subdomain: string, article: Article): Promise<LinksReply.AsObject> {
+    Validator.throwIfInvalid(article, ArticleValidator);
+    console.debug(
+      `publishing article: ${article.content.title}; ${article.content.subtitle}; content length ${article.content.body.length}`
+    );
+    return this.persistenceService.writeData(`${publication_subdomain}/${article.index}`, article);
+  }
+
+  //TODO:11: figure this out for non-authors
+  public async listPublications(): Promise<string[]> {
+    console.debug(`listing publications...`);
+    const pathReply = await this.persistenceService.lsIpns(PublicationService.ROOT);
+    console.log(JSON.stringify(pathReply));
+    if (!pathReply.item) {
+      throw new Error(`The root publication path does not exist or is not visible`);
+    }
+    return pathReply.item.itemsList
+      .filter((i) => PublicationService.RESERVED_NAMES.every((r) => i.name !== r))
+      .map((p) => p.name);
+  }
+
+  public async listArticles(
+    publication_subdomain: string
+  ): Promise<{ publication: Publication; article_refs: ListPathItem.AsObject[] }> {
+    console.debug(`listing articles from: ${publication_subdomain}...`);
+    const pathReply = await this.persistenceService.lsIpns(`${publication_subdomain}`);
+    console.log(JSON.stringify(pathReply));
+
+    if (!pathReply.item) {
+      throw new Error(`Publication ${publication_subdomain} does not exist or is not visible`);
+    }
+
+    const index = pathReply.item.itemsList.find((i) => i.name === PublicationService.INDEX_FILENAME);
+    const publication = await this.readIndex(index.path);
+    const article_refs = pathReply.item.itemsList.filter((i) => i.name !== PublicationService.INDEX_FILENAME);
+
+    return {
+      publication,
+      article_refs,
+    };
+  }
+
+  public async getArticle(publication_subdomain: string, article_index: string): Promise<Article> {
+    console.debug(`fetching article: pnlp/${publication_subdomain}/${article_index}...`);
+    const article = await this.persistenceService.catPathJson<Article>(`${publication_subdomain}/${article_index}`);
+    console.log(JSON.stringify(article));
+
+    if (!article) {
+      throw new Error(`Article pnlp/${publication_subdomain}/${article_index} does not exist or is not visible`);
+    }
+
+    Validator.throwIfInvalid(article, ArticleValidator);
+    return article;
+  }
+
+  private async readIndex(ipfs_address: string) {
+    try {
+      if (!ipfs_address) {
+        throw new Error('Index path does not exist');
+      }
+      const publication = await this.persistenceService.catIpfsJson<Publication>(ipfs_address);
+      console.log(JSON.stringify(publication));
+      Validator.throwIfInvalid(publication, PublicationValidator);
+      return publication;
+    } catch (err) {
+      throw new Error('The given directory is not a valid pnlp publication. ' + err);
+    }
+  }
+}

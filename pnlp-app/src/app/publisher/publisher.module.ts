@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ArticleListComponent } from './article-list/article-list.component';
 import { ArticleViewComponent } from './article-view/article-view.component';
@@ -17,6 +17,6 @@ import { PublicationListComponent } from './publication-list/publication-list.co
     ArticleViewComponent,
   ],
   exports: [EditorComponent, NewPublicationComponent, ArticleListComponent, ArticleViewComponent],
-  imports: [FormsModule, CommonModule, RouterModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, RouterModule],
 })
 export class PublisherModule {}

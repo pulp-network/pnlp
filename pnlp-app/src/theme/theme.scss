@@ -2,3 +2,8 @@
  * Global application theme.
  * Framework overrides and customization goes here.
  */
+
+.row-align-bottom {
+  display: flex;
+  align-items: flex-end;
+}

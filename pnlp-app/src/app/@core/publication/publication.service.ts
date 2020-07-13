@@ -13,21 +13,21 @@ export class PublicationService {
   private static RESERVED_NAMES = ['.textileseed'];
   private static ROOT = '/';
 
-  //TODO:11 convert this into subscriber pattern
-  // where to store mapping between subdomains and IPNS?
-  private knownPublications: Map<string, LinksReply.AsObject> = new Map();
-
   constructor(private persistenceService: PersistenceService) {}
 
-  public async createPublication(publication: Publication) {
+  public async createPublication(
+    publication: Publication
+  ): Promise<{ publication: Publication; links: LinksReply.AsObject }> {
     Validator.throwIfInvalid(publication, PublicationValidator);
     console.debug(`creating a new publication: ${JSON.stringify(publication.metadata)}; at ${publication.subdomain}`);
     const links = await this.persistenceService.writeData(
       `${publication.subdomain}/${PublicationService.INDEX_FILENAME}`,
       publication
     );
-    this.knownPublications.set(publication.subdomain, links);
-    return links;
+    return {
+      publication,
+      links,
+    };
   }
 
   public async createArticle(publication_subdomain: string, article: Article): Promise<LinksReply.AsObject> {

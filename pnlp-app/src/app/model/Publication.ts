@@ -6,6 +6,8 @@ export interface Publication {
   };
 }
 
+export const ValidPublicationSubdomain = /^[a-z0-9]+$/;
+
 export const PublicationValidator = (publication: Publication): string => {
   let err = '';
   let delimiter = '';

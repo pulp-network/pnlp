@@ -1,14 +1,4 @@
-<div>
-  <h2>
-    {{ (article$ | async)?.content?.title }}
-  </h2>
-  <h4>
-    {{ (article$ | async)?.content?.subtitle }}
-  </h4>
-  <p>
-    {{ (article$ | async)?.content?.body }}
-  </p>
-</div>
+<app-article-reader [article]="article$ | async"></app-article-reader>
 
 <div *ngIf="error" class="alert alert-danger" role="alert">
   {{ error }}

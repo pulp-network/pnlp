@@ -4,7 +4,7 @@ import { HomeComponent } from './home/home.component';
 import { extract } from './i18n';
 import { ArticleListComponent } from './publisher/article-list/article-list.component';
 import { ArticleViewComponent } from './publisher/article-view/article-view.component';
-import { EditorComponent } from './publisher/editor/editor.component';
+import { NewArticleComponent } from './publisher/new-article/new-article.component';
 import { NewPublicationComponent } from './publisher/new-publication/new-publication.component';
 import { PublicationListComponent } from './publisher/publication-list/publication-list.component';
 import { SignInComponent } from './user/sign-in/sign-in.component';
@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'pnlp/:publication_id', component: ArticleListComponent, data: { title: extract('pnlp') } },
   { path: 'pnlp/:publication_id/:article_id', component: ArticleViewComponent, data: { title: extract('pnlp') } },
   { path: 'user-home', component: UserHomeComponent, data: { title: extract('User Home') } },
-  { path: 'write', component: EditorComponent, data: { title: extract('Write') } },
+  { path: 'write', component: NewArticleComponent, data: { title: extract('Write') } },
   { path: 'new', component: NewPublicationComponent, data: { title: extract('Write') } },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];

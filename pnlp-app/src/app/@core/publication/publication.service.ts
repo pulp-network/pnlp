@@ -38,11 +38,19 @@ export class PublicationService {
     return this.persistenceService.writeData(`${publication_subdomain}/${article.index}`, article);
   }
 
+  public async getPublication(publication_subdomain: string): Promise<Publication> {
+    console.debug(`fetching ${publication_subdomain}...`);
+    const publication = await this.persistenceService.catPathJson<Publication>(
+      `${publication_subdomain}/${PublicationService.INDEX_FILENAME}`
+    );
+    Validator.throwIfInvalid(publication, PublicationValidator);
+    return publication;
+  }
+
   //TODO:11: figure this out for non-authors
   public async listPublications(): Promise<string[]> {
     console.debug(`listing publications...`);
     const pathReply = await this.persistenceService.lsIpns(PublicationService.ROOT);
-    console.log(JSON.stringify(pathReply));
     if (!pathReply.item) {
       throw new Error(`The root publication path does not exist or is not visible`);
     }

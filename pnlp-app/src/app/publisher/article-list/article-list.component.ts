@@ -14,17 +14,27 @@ export class ArticleListComponent implements OnInit {
   articleList$: Observable<{ publication: Publication; article_refs: ListPathItem.AsObject[] }>;
   routeSubscription: Subscription;
   error: string;
+  publicationSubdomain: string;
+  networkRequest = false;
 
   constructor(private publicationService: PublicationService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.routeSubscription = this.route.params.subscribe((params) => {
-      const publicationId = params['publication_id'];
-      this.articleList$ = from(this.publicationService.listArticles(publicationId).catch((err) => (this.error = err)));
+      this.publicationSubdomain = params['publication_id'];
+      this.networkRequest = true;
+      this.articleList$ = from(
+        this.publicationService
+          .listArticles(this.publicationSubdomain)
+          .catch((err) => (this.error = err))
+          .finally(() => (this.networkRequest = false))
+      );
     });
   }
 
   ngOnDestroy() {
-    this.routeSubscription.unsubscribe();
+    if (this.routeSubscription) {
+      this.routeSubscription.unsubscribe();
+    }
   }
 }

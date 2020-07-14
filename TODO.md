@@ -1,0 +1,5 @@
+- error handling on each UI page
+- consolidate svgs
+- fix code highlighting in markdown
+- add help links to markdown spec, emoji spec, etc https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md
+- don't initialize bucket on every call

@@ -45,3 +45,15 @@
 - realized we're going to want to use ipns addresses instead
 - added list pages for publication list and article list
 - trying to figure out how to map publication name to ipns address and keep publication names unique
+
+### 2020-07-13
+
+- publication editor
+- added bootstrap styling to create-publication, list-article
+- added ngx-markdown-editor
+
+### 2020-07-14
+
+- added bootstrap styling to new-article
+- added bootstrap styling to article-read
+- added ngx-markdown

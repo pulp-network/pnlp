@@ -8,6 +8,7 @@ import { environment } from '@env/environment';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModule } from '@shared';
+import { MarkdownModule } from 'ngx-markdown';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeModule } from './home/home.module';
@@ -29,6 +30,7 @@ import { UserModule } from './user';
     HomeModule,
     UserModule,
     LayoutModule,
+    MarkdownModule.forRoot(),
     AppRoutingModule,
   ],
   declarations: [AppComponent],

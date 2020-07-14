@@ -59,6 +59,8 @@
  * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
  */
 import '@angular/localize/init';
+import 'brace'; // used by ngx-markdown-editor
+import 'brace/mode/markdown'; // used by ngx-markdown-editor
 import 'zone.js/dist/zone'; // Included with Angular CLI.
 
 /***************************************************************************************************

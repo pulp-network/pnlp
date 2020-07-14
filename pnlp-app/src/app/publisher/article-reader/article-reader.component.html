@@ -1,0 +1,27 @@
+<div *ngIf="article">
+  <div class="d-flex justify-content-between">
+    <div>
+      <div class="lead article-title">
+        {{ article.content?.title }}
+      </div>
+      <div class="lead article-subtitle">
+        {{ article.content.subtitle }}
+      </div>
+    </div>
+    <div>
+      <img src="assets/pnlp-logo-grey@190.png" alt="pulp logo" height="80px" />
+    </div>
+  </div>
+
+  <hr class="my-4" />
+
+  <markdown preserveWhitespaces emoji katex [data]="article.content.body"></markdown>
+
+  <hr class="my-4" />
+
+  <div class="text-center mb-5">
+    <small
+      >This article {{ preview ? 'to be' : 'was' }} published on the distributed web using the pnlp protocol.</small
+    >
+  </div>
+</div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PublicationService } from '../../@core/publication/publication.service';
+import { ValidPublicationSubdomain } from '../../model/Publication';
 
 @Component({
   selector: 'app-new-publication',
@@ -10,9 +11,6 @@ import { PublicationService } from '../../@core/publication/publication.service'
 })
 export class NewPublicationComponent implements OnInit {
   publicationForm: FormGroup;
-  name: string;
-  description: string;
-  subdomain: string;
   error: any;
   networkRequest = false;
 
@@ -20,11 +18,19 @@ export class NewPublicationComponent implements OnInit {
     if (!this.publicationForm) {
       return '';
     }
-    return this.publicationForm.get('subdomainControl').hasError('pattern')
+    return this.publicationForm.controls.subdomainControl.hasError('pattern')
       ? 'lowercase letters and numbers only please'
-      : this.publicationForm.get('subdomainControl').hasError('maxlength')
+      : this.publicationForm.controls.subdomainControl.hasError('maxlength')
       ? 'no more than 24 characters please'
-      : 'at least 3 characters please';
+      : this.publicationForm.controls.subdomainControl.hasError('minlength')
+      ? 'at least 3 characters please'
+      : '';
+  }
+
+  get showSubdomainError() {
+    return (
+      !this.publicationForm.controls.subdomainControl.valid && this.publicationForm.controls.subdomainControl.dirty
+    );
   }
 
   constructor(private publicationService: PublicationService, private router: Router) {}
@@ -38,7 +44,7 @@ export class NewPublicationComponent implements OnInit {
       nameControl: new FormControl('', [Validators.required]),
       descriptionControl: new FormControl('', []),
       subdomainControl: new FormControl('', [
-        Validators.pattern(/^[a-z0-9]+$/),
+        Validators.pattern(ValidPublicationSubdomain),
         Validators.maxLength(24),
         Validators.minLength(3),
       ]),
@@ -48,13 +54,13 @@ export class NewPublicationComponent implements OnInit {
   public async submit() {
     this.error = false;
     this.networkRequest = true;
-    const subdomain = this.publicationForm.get('subdomainControl').value;
+    const subdomain = this.publicationForm.controls.subdomainControl.value;
     this.publicationService
       .createPublication({
         subdomain,
         metadata: {
-          name: this.publicationForm.get('nameControl').value,
-          description: this.publicationForm.get('descriptionControl').value,
+          name: this.publicationForm.controls.nameControl.value,
+          description: this.publicationForm.controls.descriptionControl.value,
         },
       })
       .then((_) => {

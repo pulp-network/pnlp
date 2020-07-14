@@ -7,6 +7,8 @@ export interface Article {
   };
 }
 
+export const ValidArticleIndex = /^[a-zA-Z0-9-_]+$/;
+
 export const ArticleValidator = (article: Article): string => {
   let err = '';
   let delimiter = '';
@@ -29,7 +31,5 @@ export const ArticleValidator = (article: Article): string => {
   }
   if (err) {
     return 'Article missing required fields: ' + err;
-  } else {
-    return '';
   }
 };

@@ -11,7 +11,7 @@ import { ValidPublicationSubdomain } from '../../model/Publication';
 })
 export class NewPublicationComponent implements OnInit {
   publicationForm: FormGroup;
-  error: any;
+  submissionError: string;
   networkRequest = false;
 
   get subdomainError() {
@@ -52,7 +52,7 @@ export class NewPublicationComponent implements OnInit {
   }
 
   public async submit() {
-    this.error = false;
+    this.submissionError = null;
     this.networkRequest = true;
     const subdomain = this.publicationForm.controls.subdomainControl.value;
     this.publicationService
@@ -66,7 +66,7 @@ export class NewPublicationComponent implements OnInit {
       .then((_) => {
         this.router.navigate(['pnlp', subdomain]);
       })
-      .catch((err) => (this.error = err))
+      .catch((err) => (this.submissionError = err.message || err))
       .finally(() => (this.networkRequest = false));
   }
 }

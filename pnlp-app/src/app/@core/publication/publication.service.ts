@@ -19,11 +19,13 @@ export class PublicationService {
     publication: Publication
   ): Promise<{ publication: Publication; links: LinksReply.AsObject }> {
     Validator.throwIfInvalid(publication, PublicationValidator);
+
     console.debug(`creating a new publication: ${JSON.stringify(publication.metadata)}; at ${publication.subdomain}`);
     const links = await this.persistenceService.writeData(
       `${publication.subdomain}/${PublicationService.INDEX_FILENAME}`,
       publication
     );
+
     return {
       publication,
       links,
@@ -43,11 +45,11 @@ export class PublicationService {
     const publication = await this.persistenceService.catPathJson<Publication>(
       `${publication_subdomain}/${PublicationService.INDEX_FILENAME}`
     );
+
     Validator.throwIfInvalid(publication, PublicationValidator);
     return publication;
   }
 
-  //TODO:11: figure this out for non-authors
   public async listPublications(): Promise<string[]> {
     console.debug(`listing publications...`);
     const pathReply = await this.persistenceService.lsIpns(PublicationService.ROOT);
@@ -63,11 +65,12 @@ export class PublicationService {
     publication_subdomain: string
   ): Promise<{ publication: Publication; article_refs: ListPathItem.AsObject[] }> {
     console.debug(`listing articles from: ${publication_subdomain}...`);
-    const pathReply = await this.persistenceService.lsIpns(`${publication_subdomain}`);
-    console.log(JSON.stringify(pathReply));
+    const pathReply = await this.persistenceService.lsIpns(`${publication_subdomain}`).catch((err) => {
+      throw new Error(`We looked high and low for ${publication_subdomain} but we can't find it right now`);
+    });
 
     if (!pathReply.item) {
-      throw new Error(`Publication ${publication_subdomain} does not exist or is not visible`);
+      throw new Error(`We looked high and low for ${publication_subdomain} but we can't find it right now`);
     }
 
     const index = pathReply.item.itemsList.find((i) => i.name === PublicationService.INDEX_FILENAME);
@@ -83,7 +86,6 @@ export class PublicationService {
   public async getArticle(publication_subdomain: string, article_index: string): Promise<Article> {
     console.debug(`fetching article: pnlp/${publication_subdomain}/${article_index}...`);
     const article = await this.persistenceService.catPathJson<Article>(`${publication_subdomain}/${article_index}`);
-    console.log(JSON.stringify(article));
 
     if (!article) {
       throw new Error(`Article pnlp/${publication_subdomain}/${article_index} does not exist or is not visible`);
@@ -99,7 +101,6 @@ export class PublicationService {
         throw new Error('Index path does not exist');
       }
       const publication = await this.persistenceService.catIpfsJson<Publication>(ipfs_address);
-      console.log(JSON.stringify(publication));
       Validator.throwIfInvalid(publication, PublicationValidator);
       return publication;
     } catch (err) {

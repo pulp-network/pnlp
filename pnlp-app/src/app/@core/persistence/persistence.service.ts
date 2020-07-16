@@ -77,7 +77,11 @@ export class PersistenceService {
 
   private async initBucketMap(): Promise<{ default_key: string; map: Map<string, Buckets> }> {
     console.debug('initializing bucket map...');
+
+    // TODO: maybe we can kill identity service
     const identity = await this.identityService.getIdentity(IdentitySource.LIB_P2P_RANDOM);
+
+    // TODO: talk to textile team about options here
     const buckets = await Buckets.withKeyInfo(this.auth);
     // Authorize the user and your insecure keys with getToken
     await buckets.getToken(identity);

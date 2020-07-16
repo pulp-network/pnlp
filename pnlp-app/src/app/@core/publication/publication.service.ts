@@ -26,6 +26,12 @@ export class PublicationService {
       publication
     );
 
+    // TODO:DIMETREDON
+    // (1) ng g service blockchain
+    // (2) using ethers, create transaction invoking contract
+    // (3) ask metamask to sign it
+    // (4) broadcast transaction using infura, metamask, ...
+
     return {
       publication,
       links,
@@ -42,6 +48,11 @@ export class PublicationService {
 
   public async getPublication(publication_subdomain: string): Promise<Publication> {
     console.debug(`fetching ${publication_subdomain}...`);
+
+    // TODO:DIMETREDON
+    // (1) using infura, metamask, ...
+    // (2) call getPublication(publication_subdomain)
+
     const publication = await this.persistenceService.catPathJson<Publication>(
       `${publication_subdomain}/${PublicationService.INDEX_FILENAME}`
     );

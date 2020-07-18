@@ -1,32 +1,43 @@
 pragma solidity >=0.4.25 <0.7.0;
 
 contract pnlp {
-    struct Article {
-        uint256 id;
-        bytes32[] hashes;
+    struct Publication {
+        bytes32 ipnsHash;
         address publisher;
         uint256 timestamp;
-    } 
-    
-    uint256 public counter;
-    Article[] articles;
-
-    event Published(uint256 id, bytes32[] hashes, address publisher, uint256 timestamp);
-
-    constructor() public {
-        counter = 0;
     }
 
-    function publish(bytes32[] memory hashes) public returns (uint256) {
-        uint256 id = counter;
-        articles[id] = Article(id, hashes, msg.sender, block.timestamp);
-        emit Published(id, hashes, msg.sender, block.timestamp);
-        counter++;
-        return id;
+    struct Article {
+        address publisher;
+        uint256 timestamp;
     }
 
-    function getArticle(uint256 id) public view returns (uint256, bytes32[] memory, address, uint256) {
-        require(id < counter);
-        return (articles[id].id, articles[id].hashes, articles[id].publisher, articles[id].timestamp);
+    mapping (string => Publication) public publications;
+    mapping (bytes32 => Article) public articles;
+
+    event CreatedPublication(string publicationName, bytes32 ipnsHash, address publisher, uint256 timestamp);
+    event PublishedArticle(string publicationName, address publisher, uint256 timestamp);
+
+    function createPublication(string memory publicationName, bytes32 ipnsHash) public {
+        // Using ipns
+        // No collisions allowed!
+        // record callers address
+        // v3 Require a stake
+        require(publications[publicationName].publisher == address(0), "publicationName is already in use");
+        emit CreatedPublication(publicationName, ipnsHash, msg.sender, block.timestamp);
+        Publication memory publication = Publication(ipnsHash, msg.sender, block.timestamp);
+        publications[publicationName] = publication;
     }
+
+    function publishArticle(string memory publicationName, bytes32 ipfsHash) public {
+        require(publications[publicationName].publisher == msg.sender, "articles can only be added to a publication by the publication creator");
+        emit PublishedArticle(publicationName, msg.sender, block.timestamp);
+        Article memory article = Article(msg.sender, block.timestamp);
+        articles[ipfsHash] = article;
+    }
+
+    // - Get all of the publications? - Not now (check out The Graph)
+    // - You know the publication, list all of the articles?
+    // - Get ipns hash of pulbication from name of pulbication
+    // - v3 Keep track of ipFs addresses of publications so that when ipns points to something else, history is kept.
 }

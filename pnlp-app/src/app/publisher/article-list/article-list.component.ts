@@ -13,21 +13,21 @@ import { Publication } from '../../model/Publication';
 export class ArticleListComponent implements OnInit {
   articleList$: Observable<{ publication: Publication; article_refs: ListPathItem.AsObject[] }>;
   routeSubscription: Subscription;
-  error: string;
   publicationSubdomain: string;
-  networkRequest = false;
+  isLoading = false;
+  error: string;
 
   constructor(private publicationService: PublicationService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.routeSubscription = this.route.params.subscribe((params) => {
       this.publicationSubdomain = params['publication_id'];
-      this.networkRequest = true;
+      this.isLoading = true;
       this.articleList$ = from(
         this.publicationService
           .listArticles(this.publicationSubdomain)
-          .catch((err) => (this.error = err))
-          .finally(() => (this.networkRequest = false))
+          .catch((err) => (this.error = err?.message || err))
+          .finally(() => (this.isLoading = false))
       );
     });
   }

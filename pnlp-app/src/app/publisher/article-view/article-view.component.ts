@@ -12,6 +12,7 @@ import { Article } from '../../model/Article';
 export class ArticleViewComponent implements OnInit {
   article$: Observable<Article>;
   routeSubscription: Subscription;
+  isLoading = false;
   error: string;
 
   constructor(private publicationService: PublicationService, private route: ActivatedRoute) {}
@@ -20,8 +21,12 @@ export class ArticleViewComponent implements OnInit {
     this.routeSubscription = this.route.params.subscribe((params) => {
       const publicationId = params['publication_id'];
       const articleId = params['article_id'];
+      this.isLoading = true;
       this.article$ = from(
-        this.publicationService.getArticle(publicationId, articleId).catch((err) => (this.error = err))
+        this.publicationService
+          .getArticle(publicationId, articleId)
+          .catch((err) => (this.error = err.message || err))
+          .finally(() => (this.isLoading = false))
       );
     });
   }

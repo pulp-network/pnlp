@@ -22,22 +22,21 @@ export class PersistenceService {
 
   constructor(private identityService: IdentityService) {}
 
-  private async initializeBucket() {
-    const { default_key, map } = await this.initBucketMap();
-    this.selectedBucketKey = default_key;
-    this.bucketMap = map;
+  private async initializeBucketIfNecessary() {
+    if (!this.isInitialized()) {
+      const { default_key, map } = await this.initBucketMap();
+      this.selectedBucketKey = default_key;
+      this.bucketMap = map;
+    }
   }
 
   private isInitialized() {
-    //TODO:11: get this working
-    return !(this.selectedBucketKey && this.bucketMap && this.bucketMap.size);
+    return this.selectedBucketKey && this.bucketMap && this.bucketMap.size;
   }
 
   public async writeData(path: string, content: any): Promise<LinksReply.AsObject> {
-    // if (!this.isInitialized()) {
-    // console.debug('Bucket not yet initialized');
-    await this.initializeBucket();
-    // }
+    await this.initializeBucketIfNecessary();
+
     const buf = Buffer.from(JSON.stringify(content, null, 2));
     console.debug(`Writing ${buf.length} bytes to ${path}`);
     await this.bucketMap.get(this.selectedBucketKey).pushPath(this.selectedBucketKey, path, buf);
@@ -45,15 +44,14 @@ export class PersistenceService {
   }
 
   public async lsIpns(path: string): Promise<ListPathReply.AsObject> {
-    // if (!this.isInitialized()) {
-    // console.debug('Bucket not yet initialized');
-    await this.initializeBucket();
-    // }
+    await this.initializeBucketIfNecessary();
+
     return this.bucketMap.get(this.selectedBucketKey).listPath(this.selectedBucketKey, path);
   }
 
   public async catPathJson<T>(path: string, progress?: (num?: number) => void): Promise<T> {
-    await this.initializeBucket();
+    await this.initializeBucketIfNecessary();
+
     const request = this.bucketMap.get(this.selectedBucketKey).pullPath(this.selectedBucketKey, path, { progress });
     const { value } = await request.next();
     let str = '';
@@ -65,6 +63,8 @@ export class PersistenceService {
   }
 
   public async catIpfsJson<T>(path: string, progress?: (num?: number) => void): Promise<T> {
+    await this.initializeBucketIfNecessary();
+
     const request = this.bucketMap.get(this.selectedBucketKey).pullIpfsPath(path, { progress });
     const { value } = await request.next();
     let str = '';
@@ -75,9 +75,13 @@ export class PersistenceService {
     return contents_as_json;
   }
 
-  public async initBucketMap(): Promise<{ default_key: string; map: Map<string, Buckets> }> {
-    console.debug('initializing bucket...');
+  private async initBucketMap(): Promise<{ default_key: string; map: Map<string, Buckets> }> {
+    console.debug('initializing bucket map...');
+
+    // TODO: maybe we can kill identity service
     const identity = await this.identityService.getIdentity(IdentitySource.LIB_P2P_RANDOM);
+
+    // TODO: talk to textile team about options here
     const buckets = await Buckets.withKeyInfo(this.auth);
     // Authorize the user and your insecure keys with getToken
     await buckets.getToken(identity);
@@ -89,7 +93,6 @@ export class PersistenceService {
 
     const bucketMap = new Map();
     bucketMap.set(root.key, buckets);
-    console.log(buckets);
     return { default_key: root.key, map: bucketMap };
   }
 }

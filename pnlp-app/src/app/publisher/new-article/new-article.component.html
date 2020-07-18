@@ -1,11 +1,14 @@
-<div class="mt-4 d-flex justify-content-center" *ngIf="!error">
-  <div *ngIf="!isLoading" class="flex-grow-1">
+<app-loader *ngIf="isLoading"></app-loader>
+<app-error [error]="loadingError"></app-error>
+
+<div class="mt-4 d-flex justify-content-center" *ngIf="!isLoading && !loadingError">
+  <div class="flex-grow-1">
     <div *ngIf="!previewMode">
       <div class="text-muted lead mb-4">
         <button type="button" class="btn btn-light" [routerLink]="['/pnlp', (publication$ | async)?.subdomain]">
           <svg
-            width="1em"
-            height="1em"
+            width="1.5em"
+            height="1.5em"
             viewBox="0 0 16 16"
             class="bi bi-arrow-left-short"
             fill="currentColor"
@@ -48,28 +51,11 @@
         </div>
 
         <div class="form-group">
-          <md-editor
-            name="Body"
-            [(ngModel)]="body"
-            [height]="'400px'"
-            mode="editor"
-            [options]="editorOptions"
-            maxlength="100000"
-            [ngModelOptions]="{ standalone: true }"
-          >
-          </md-editor>
-        </div>
-
-        <!-- TOOD: 2 create article-view component and article-reader that accepts the article as input -->
-        <!-- TOOD: 3 re-use that component and toggle it with the preview/edit buttons -->
-        <!-- TOOD: 4 fix errors (make them more general or make them more flexible) -->
-
-        <div class="form-group">
-          <div class="input-group input-group-sm mb-3">
+          <div class="input-group input-group-sm">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="article-index-desc"
-                >https://{{ (publication$ | async)?.subdomain }}.on.pnlp.network/</span
-              >
+              <span class="input-group-text" id="article-index-desc">
+                https://{{ (publication$ | async)?.subdomain }}.on.pnlp.network/
+              </span>
             </div>
             <input
               type="text"
@@ -88,20 +74,31 @@
           </div>
         </div>
 
-        <div class="mt-4">
+        <div class="form-group">
+          <md-editor
+            name="Body"
+            [(ngModel)]="body"
+            [height]="'400px'"
+            mode="editor"
+            [options]="editorOptions"
+            maxlength="100000"
+            [ngModelOptions]="{ standalone: true }"
+          >
+          </md-editor>
+        </div>
+
+        <div class="d-flex justify-content-end mb-5">
           <button
-            class="btn btn-secondary btn-block btn-lg"
+            class="btn btn-secondary btn-lg mr-1"
             (click)="togglePreviewMode()"
             [disabled]="!articleForm.valid || isCreating"
           >
             Preview
           </button>
-        </div>
 
-        <div class="mt-1">
           <button
             type="submit"
-            class="btn btn-primary btn-block btn-lg"
+            class="btn btn-primary btn-lg ml-1"
             (click)="submit()"
             [disabled]="!articleForm.valid || isCreating"
           >
@@ -113,20 +110,20 @@
 
     <div *ngIf="previewMode">
       <div class="d-flex justify-content-between">
-        <button type="button" class="align-self-center btn btn-light" (click)="togglePreviewMode()">
+        <button type="button" class="align-self-center btn btn-secondary" (click)="togglePreviewMode()">
           <svg
-            width="1em"
-            height="1em"
+            width="1.5em"
+            height="1.5em"
             viewBox="0 0 16 16"
-            class="bi bi-arrow-left-short"
+            class="bi bi-arrow-left"
             fill="currentColor"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
               fill-rule="evenodd"
-              d="M7.854 4.646a.5.5 0 0 1 0 .708L5.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"
+              d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"
             />
-            <path fill-rule="evenodd" d="M4.5 8a.5.5 0 0 1 .5-.5h6.5a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5z" />
+            <path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
           </svg>
           Continue Editing
         </button>
@@ -140,7 +137,7 @@
         <div class="col">
           <hr />
         </div>
-        <div class="col-auto text text-sm text-muted">
+        <div class="col-auto small text-muted">
           https://{{ (publication$ | async)?.subdomain }}.on.pnlp.network/{{ previewArticle.index }}
         </div>
         <div class="col mb-2">
@@ -150,32 +147,5 @@
 
       <app-article-reader [article]="previewArticle" [preview]="true"></app-article-reader>
     </div>
-  </div>
-
-  <div *ngIf="isLoading" class="mt-5">
-    <div class="spinner-grow text-primary" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-  </div>
-</div>
-
-<div *ngIf="error" class="alert alert-light text-center" role="alert">
-  <div class="mb-3">
-    <svg
-      width="10em"
-      height="10em"
-      viewBox="0 0 16 16"
-      class="bi bi-patch-question-fll"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        fill-rule="evenodd"
-        d="M5.933.87a2.89 2.89 0 0 1 4.134 0l.622.638.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636zM7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm1.602-2.027c-.05.386-.218.627-.554.627-.377 0-.585-.317-.585-.745v-.11c0-.727.307-1.208.926-1.641.614-.44.822-.762.822-1.325 0-.638-.42-1.084-1.03-1.084-.55 0-.916.323-1.074.914-.109.364-.292.51-.564.51C6.203 6.12 6 5.873 6 5.48c0-.251.045-.468.139-.69.307-.798 1.079-1.29 2.099-1.29 1.341 0 2.262.902 2.262 2.227 0 .896-.376 1.511-1.05 1.986-.648.445-.806.726-.846 1.26z"
-      />
-    </svg>
-  </div>
-  <div class="lead">
-    There is no publication named <b>{{ publicationSubdomain }}</b> or we had trouble loading it.
   </div>
 </div>

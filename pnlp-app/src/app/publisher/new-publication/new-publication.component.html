@@ -71,13 +71,10 @@
               </button>
             </div>
           </div>
+          <div class="text-danger small">
+            {{ submissionError }}
+          </div>
         </form>
-      </div>
-    </div>
-
-    <div class="mt-3">
-      <div *ngIf="error" class="alert alert-danger" role="alert">
-        {{ error }}
       </div>
     </div>
   </div>

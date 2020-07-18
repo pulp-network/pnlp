@@ -23,11 +23,12 @@ export class NewArticleComponent implements OnInit {
     showBorder: false,
     hideIcons: ['TogglePreview', 'Image'],
   };
-  error: any;
   publicationSubdomain: string;
   isCreating = false;
   isLoading = false;
   previewArticle: Article;
+  submissionError: string;
+  loadingError: string;
 
   get indexError() {
     if (!this.articleForm) {
@@ -59,7 +60,7 @@ export class NewArticleComponent implements OnInit {
       this.publication$ = from(
         this.publicationService
           .getPublication(this.publicationSubdomain)
-          .catch((err) => (this.error = err))
+          .catch((err) => (this.loadingError = err.message || err))
           .finally(() => (this.isLoading = false))
       );
     });
@@ -98,15 +99,15 @@ export class NewArticleComponent implements OnInit {
   }
 
   public async submit() {
-    this.error = false;
-    this.isCreating = true;
     const article = this.mapFormToArticle();
+    this.isCreating = true;
+    this.submissionError = null;
     this.publicationService
       .createArticle(this.publicationSubdomain, article)
       .then((_) => {
         this.router.navigate(['pnlp', this.publicationSubdomain, article.index]);
       })
-      .catch((err) => (this.error = err))
+      .catch((err) => (this.submissionError = err))
       .finally(() => (this.isCreating = false));
   }
 

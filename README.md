@@ -21,7 +21,7 @@ pnlp (pronounced "pulp") is an open publishing platform for written content.
 
 - Run `ganache-cli` in a new terminal. To install Ganche the first time, run `npm install -g ganache-cli`.
 - Open another terminal
-- `cd pnlp-contract && truffle migrate`
+- `cd pnlp-contract && truffle build && truffle migrate`
 
 # Stack
 

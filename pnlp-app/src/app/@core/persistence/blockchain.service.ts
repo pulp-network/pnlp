@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { BigNumber, Contract, providers } from 'ethers';
 
 // If this line fails when you build, please run `truffle build` from `pnlp-contract`.
-import ContractJson from '../../../pnlp-contract/build/contracts/pnlp.json';
+import ContractJson from '../../../../../pnlp-contract/build/contracts/pnlp.json';
 
 class StrongType<Definition, Type> {
   private _type: Definition;

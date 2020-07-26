@@ -130,6 +130,27 @@ export class BlockchainService {
     }
   }
 
+  public async getAccount(): Promise<EthereumAddress> {
+    if (!this.initialized) {
+      this.init();
+    }
+
+    const accounts = await (window as WindowInstanceWithEthereum).ethereum.request({ method: 'eth_requestAccounts' });
+    if (accounts.length === 0) {
+      throw new BlockchainError('No account is provided. Please provide an account to this application.');
+    }
+
+    return new EthereumAddress(BigNumber.from(accounts[0]));
+  }
+
+  public async signText(text: string): Promise<string> {
+    if (!this.initialized) {
+      this.init();
+    }
+
+    return await this.signer.signMessage(text);
+  }
+
   private async revertWrapper(wrappedFunction: () => void) {
     if (!this.initialized) {
       this.init();
@@ -143,14 +164,6 @@ export class BlockchainService {
         throw new BlockchainError(error.data.message.replace('VM Exception while processing transaction: revert ', ''));
       }
     }
-  }
-
-  private async signText(text: string): Promise<string> {
-    if (!this.initialized) {
-      this.init();
-    }
-
-    return await this.signer.signMessage(text);
   }
 
   private init() {
@@ -171,48 +184,5 @@ export class BlockchainService {
     this.contract = new Contract(this.contractAddress.value.toHexString(), this.contractAbi, this.signer);
 
     this.initialized = true;
-  }
-
-  private async getAccount(): Promise<string> {
-    if (!this.initialized) {
-      this.init();
-    }
-
-    const accounts = await (window as WindowInstanceWithEthereum).ethereum.request({ method: 'eth_requestAccounts' });
-    if (accounts.length === 0) {
-      throw new BlockchainError('No account is provided. Please provide an account to this application.');
-    }
-
-    return accounts[0];
-  }
-
-  // Move this function to another service at some point
-  private messageForEntropyGeneration(ethereum_address: EthereumAddress, application_name: string): string {
-    return (
-      '******************************************************************************** \
-      READ THIS MESSAGE CAREFULLY. \
-      DO NOT SHARE THIS SIGNED MESSAGE WITH ANYONE OR THEY WILL HAVE READ AND WRITE \
-      ACCESS TO THIS APPLICATION. \
-      DO NOT SIGN THIS MESSAGE IF THE FOLLOWING IS NOT TRUE OR YOU DO NOT CONSENT \
-      TO THE CURRENT APPLICATION HAVING ACCESS TO THE FOLLOWING APPLICATION. \
-      ******************************************************************************** \
-      The Ethereum address used by this application is: \
-      \
-      ' +
-      ethereum_address.value.toHexString() +
-      '\
-      By signing this message, you authorize the current application to use the \
-      following app associated with the above address:\
-      \
-      ' +
-      application_name +
-      '\
-      ******************************************************************************** \
-      ONLY SIGN THIS MESSAGE IF YOU CONSENT TO THE CURRENT PAGE ACCESSING THE KEYS \
-      ASSOCIATED WITH THE ABOVE ADDRESS AND APPLICATION. \
-      AGAIN, DO NOT SHARE THIS SIGNED MESSAGE WITH ANYONE OR THEY WILL HAVE READ AND \
-      WRITE ACCESS TO THIS APPLICATION. \
-      ********************************************************************************'
-    );
   }
 }

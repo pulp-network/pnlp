@@ -4,6 +4,7 @@ import { Article, ArticleValidator } from '../../model/Article';
 import { Publication, PublicationValidator } from '../../model/Publication';
 import { Validator } from '../../model/Validator';
 import { PersistenceService } from '../persistence/persistence.service';
+import { BlockchainService } from '../persistence/blockchain.service';
 
 @Injectable({
   providedIn: 'root',

@@ -88,7 +88,7 @@ export class BlockchainService {
     return new Publication(
       new IPNSHash(publication.ipnsHash),
       new EthereumAddress(BigNumber.from(publication.publisher)),
-      new Date(publication.timestamp.toNumber())
+      new Date(publication.timestamp.toNumber() * 1000)
     );
   }
 
@@ -112,7 +112,10 @@ export class BlockchainService {
       return null;
     }
 
-    return new Article(new EthereumAddress(BigNumber.from(article.publisher)), new Date(article.timestamp.toNumber()));
+    return new Article(
+      new EthereumAddress(BigNumber.from(article.publisher)),
+      new Date(article.timestamp.toNumber() * 1000)
+    );
   }
 
   public async publishArticle(publication_subdomain: string, ipfs_hash: IPFSHash) {

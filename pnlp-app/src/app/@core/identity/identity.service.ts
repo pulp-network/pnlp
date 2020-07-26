@@ -41,6 +41,7 @@ export class IdentityService {
         identity = await Libp2pCryptoIdentity.fromRandom();
     }
 
+    // Here I think we need to pass in from keystore service the identity?
     const identityString = identity.toString();
     localStorage.setItem(IdentityService.LOCAL_STORAGE_KEY, identityString);
     this.identity = identity;

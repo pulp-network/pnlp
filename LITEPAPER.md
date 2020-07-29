@@ -2,45 +2,41 @@
 
 pulp is a protocol that specifies a path for the regular publication and subscription of text-first content.
 
-## Defintions
-
-_The Characters whom pulp protocol serves and the Artifacts with which it deals._
-
-### The Characters
+## The Characters
 
 There are three characters involved in pulp: the Author, the Subscriber, and the Aggregator.
 
-The Author is a content creator. This is an individual who thinks she has something interesting to say on a regular basis and is brave enough to shout it out to the rest of the universe. The Author's primary medium is written, which is why she chose pulp: pulp is designed to facilitate text-first publications. Importantly, it is not a protocol intended for video-first, image-first, or audio-first publications. The Author is also not a website designer: she is interested in writing prose, not code or markup. Back in the day she published on Medium.com, then switched to Substack a year ago. But she fears lock-in, doesn't agree with certain platform policies, and is generally excited about web3. When pulp launched, she jumped at the chance to use a truly decentralized publishing platform.
+The **Author** is a content creator. This is an individual who thinks she has something interesting to say on a regular basis and is brave enough to shout it out to the rest of the universe. The Author's primary medium is written, which is why she chose pulp: pulp is designed to facilitate text-first publications. Importantly, it is not a protocol intended for video-first, image-first, or audio-first publications. The Author is also not a website designer: she is interested in writing prose, not code or markup. Back in the day she published on Medium.com, then switched to Substack a year ago. But she fears lock-in, doesn't agree with certain platform policies, and is generally excited about web3. When pulp launched, she jumped at the chance to use a truly decentralized publishing platform.
 
-The Subscriber is a content consumer. This is an individual who enjoys regular text-first content in a convenient form. The Subscriber is someone who puts his trust in particular Authors for the recurring content they provide. The Subscriber is also willing to compensate the parties that serve him the content conveniently because he recognizes that the convenience of and the recurrence of the content is as valuable as the content itself. The Subscriber is using pulp largely because his favorite Authors are writing on pulp.
+The **Subscriber** is a content consumer. This is an individual who enjoys regular text-first content in a convenient form. The Subscriber is someone who puts his trust in particular Authors for the recurring content they provide. The Subscriber is also willing to compensate the parties that serve him the content conveniently because he recognizes that the convenience of and the recurrence of the content is as valuable as the content itself. The Subscriber is using pulp largely because his favorite Authors are writing on pulp.
 
-The Aggregator is a party that serves both the Author and the Subscriber. It is a company or organization that provides a software client that implements the pulp protocol. The Aggregator is profit-driven, and designs the software client to serve the Author and the Subscriber in a way that maximizes profit. But Aggregators beware: it is a low-margin proposition. A good Aggregator recognizes the needs of the Author: marketing, subscriber tracking, a clean writing experience; the needs of the Subscriber: convenient content delivery; and the needs that overlap: content discovery. Importantly, the Aggregator is optional. A Subscriber may always seek out an Author directly and vice versa. The Aggregator is only as useful to this flow as it makes itself: by the nature of the pulp protocol, this middle party is optional.
+The **Aggregator** is a party that serves both the Author and the Subscriber. It is a company or organization that provides a software client that implements the pulp protocol. The Aggregator is profit-driven, and designs the software client to serve the Author and the Subscriber in a way that maximizes profit. But Aggregators beware: it is a low-margin proposition. A good Aggregator recognizes the needs of the Author: marketing, subscriber tracking, a clean writing experience; the needs of the Subscriber: convenient content delivery; and the needs that overlap: content discovery. Importantly, the Aggregator is optional. A Subscriber may always seek out an Author directly and vice versa. The Aggregator is only as useful to this flow as it makes itself: by the nature of the pulp protocol, this middle party is optional.
 
 The above actors take part in a dance around the pulp protocol that ultimately benefits all parties involved.
 
-### The Artifacts
+## The Artifacts
 
 There are four artifacts: the Publication, the Article, the ArchivedArticle, and the Draft.
 
-The Publication represents a channel for recurring text-first content. The pulp Publication is the magazine or the newsletter of web3. Each Publication is owned by an Author; it is the owning Author who writes the stream of written content emanating from the Publication. The owning Author of a Publication can also delegate publishing permsissions to other Authors should they so choose.
+The **Publication** represents a channel for recurring text-first content. The pulp Publication is the magazine or the newsletter of web3. Each Publication is owned by an Author; it is the owning Author who writes the stream of written content emanating from the Publication. The owning Author of a Publication can also delegate publishing permsissions to other Authors should they so choose.
 
-The Article represents a discrete unit of written content. Upon the release of the Article, the Aggregator collects the content and makes it available to the Subscriber in the convenient format that the Subscriber signed up for. Alternatively, the Subscriber may seek out the Article by visiting its unique content-based address through any browser of their choosing. At the option of the Author, an Article may be considered private and made available only to paying Subscribers; this is accomplished by publishing the encrypted version of the Article and distributing keys to paying Subscribers.
+The **Article** represents a discrete unit of written content. Upon the release of the Article, the Aggregator collects the content and makes it available to the Subscriber in the convenient format that the Subscriber signed up for. Alternatively, the Subscriber may seek out the Article by visiting its unique content-based address through any browser of their choosing. At the option of the Author, an Article may be considered private and made available only to paying Subscribers; this is accomplished by publishing the encrypted version of the Article and distributing keys to paying Subscribers.
 
-The ArchivedArticle represents a momentary and immutable snapshot of an Article as it existed at a point in time. Its persistence is funded by any and all parties who wish to preserve it for posterity. The ArchivedArticle includes metadata about the article such as Author, Publication, publicaiton date, etc. It is stored in an utterly distributed manner on the Filecoin network: once archived, no organization on Earth is powerful enough to censor its existence.
+The **ArchivedArticle** represents a momentary and immutable snapshot of an Article as it existed at a point in time. Its persistence is funded by any and all parties who wish to preserve it for posterity. The ArchivedArticle includes metadata about the article such as Author, Publication, publicaiton date, etc. It is stored in an utterly distributed manner on the Filecoin network: once archived, no organization on Earth is powerful enough to censor its existence.
 
-The Draft represents an unpublished Article. The Draft is stored in the same manner as any Article, but it is kept secret to the Author through encryption with the Author's own private keys. At any time, the Author may choose to release a Draft to the world by decrypting it and labeling it an Article.
+The **Draft** represents an unpublished Article. The Draft is stored in the same manner as any Article, but it is kept secret to the Author through encryption with the Author's own private keys. At any time, the Author may choose to release a Draft to the world by decrypting it and labeling it an Article.
 
 ## Technical Overview
 
-An Author is identified on the pulp protocol by a public/private keypair. This keypair controls a corresponding Ethereum address for payments and ENS identification, it controls an IPNS address for publishing content, and it is used to encrypt and decrypt private Articles and Drafts.
+An **Author** is identified on the pulp protocol by a public/private keypair. This keypair controls a corresponding Ethereum address for payments and ENS identification, it controls an IPNS address for publishing content, and it is used to encrypt and decrypt private Articles and Drafts.
 
-A Subscriber is identified on the pulp protocol by a Public/Private Keypair and optionally an email address. Importantly, Subscribers of public content can remain completely anonymous.
+A **Subscriber** is identified on the pulp protocol by a Public/Private Keypair and optionally an email address. Importantly, Subscribers of public content can remain completely anonymous.
 
-A Publication is an IPNS address and a globally unique friendly name. A Publication is referred to by its multi-address: `pulp/<ipns-address>/<publication-name>`. The global uniqueness of the friendly name is enforced by the pulp publication registration contract on the Ethereum blockchain.
+A **Publication** is an IPNS address and a globally unique friendly name. A Publication is referred to by its multi-address: `pulp/<ipns-address>/<publication-name>`. The global uniqueness of the friendly name is enforced by the pulp publication registration contract on the Ethereum blockchain.
 
-An Article is a file stored on the filecoin network. It is referred to by its multi-address: `pulp/<ipns-address>/<publication-name>/<article-name>`. Because it is nested under an IPNS address, an article is liable to be edited by the person who controls the keys to the IPNS address, its original Author.
+An **Article** is a file stored on the filecoin network. It is referred to by its multi-address: `pulp/<ipns-address>/<publication-name>/<article-name>`. Because it is nested under an IPNS address, an article is liable to be edited by the person who controls the keys to the IPNS address, its original Author.
 
-An ArchivedArticle is a point-in-time snapshot of an Article that is stored on the Filecoin network. It is referred to by its ipfs hash: `ipfs/Qm....` For this reason it is immutable, even by the Author. Any Author, Aggregator, Subscriber, or even non-participant may decide to _archive_ an Article as an ArchivedArticle on the Filecoin network. This captures the Article and article metadata (like publication date, publication-name, author address) and persists it for some time at the expense of the archiving party.
+An **ArchivedArticle** is a point-in-time snapshot of an Article that is stored on the Filecoin network. It is referred to by its ipfs hash: `ipfs/Qm....` For this reason it is immutable, even by the Author. Any Author, Aggregator, Subscriber, or even non-participant may decide to _archive_ an Article as an ArchivedArticle on the Filecoin network. This captures the Article and article metadata (like publication date, publication-name, author address) and persists it for some time at the expense of the archiving party.
 
 ## Protocol Outline
 
@@ -179,3 +175,11 @@ Choose the article slug that you'd like to read.
 **3. Download article from IPFS**
 
 Download this file: `ipns/<ipns_address>/<publication_slug>/<article-slug>`. Enjoy!
+
+### Archive Article
+
+TODO
+
+### Subscribe to Publication
+
+TODO

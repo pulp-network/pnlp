@@ -46,6 +46,11 @@ export class PersistenceService {
   public async lsIpns(path: string): Promise<ListPathReply.AsObject> {
     await this.initializeBucketIfNecessary();
 
+    // TODO DIMETRADON
+    // Goal 1 List contents of IPNS directory here.
+    // Subtask of goal if can't do in one call: Add IPNS resolver here.
+
+    // TODO I am pretty sure that this next line is broken.
     return this.bucketMap.get(this.selectedBucketKey).listPath(this.selectedBucketKey, path);
   }
 

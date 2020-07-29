@@ -4,7 +4,7 @@ import { Article, ArticleValidator } from '../../model/Article';
 import { Publication, PublicationValidator } from '../../model/Publication';
 import { Validator } from '../../model/Validator';
 import { PersistenceService } from '../persistence/persistence.service';
-import { BlockchainService } from '../persistence/blockchain.service';
+import { BlockchainService, IPNSHash, IPFSHash } from '../persistence/blockchain.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,7 @@ export class PublicationService {
   private static RESERVED_NAMES = ['.textileseed'];
   private static ROOT = '/';
 
-  constructor(private persistenceService: PersistenceService) {}
+  constructor(private persistenceService: PersistenceService, private blockchainService: BlockchainService) {}
 
   public async createPublication(
     publication: Publication
@@ -33,6 +33,8 @@ export class PublicationService {
     // (3) ask metamask to sign it
     // (4) broadcast transaction using infura, metamask, ...
 
+    await this.blockchainService.createPublication(publication.subdomain, new IPNSHash(''));
+
     return {
       publication,
       links,
@@ -44,7 +46,16 @@ export class PublicationService {
     console.debug(
       `publishing article: ${article.content.title}; ${article.content.subtitle}; content length ${article.content.body.length}`
     );
-    return this.persistenceService.writeData(`${publication_subdomain}/${article.index}`, article);
+    const linksReply = await this.persistenceService.writeData(`${publication_subdomain}/${article.index}`, article);
+
+    const PUT_TX_IN_HERE = await this.blockchainService.publishArticle(publication_subdomain, new IPFSHash());
+
+    // Check it out DIMETRADON and DP-KB
+    // TODO we need to write to index.json of the publication on Textile
+    // We should have a map of artticle name to transaction hash
+    // Then we can show it on an ethereum explorer.
+
+    return linksReply;
   }
 
   public async getPublication(publication_subdomain: string): Promise<Publication> {
@@ -53,10 +64,18 @@ export class PublicationService {
     // TODO:DIMETREDON
     // (1) using infura, metamask, ...
     // (2) call getPublication(publication_subdomain)
+    const publication = await this.blockchainService.getPublication(publication_subdomain);
 
+    // TODO https://filecoinproject.slack.com/archives/G015YUYA7CJ/p1595349380433800
+    // We need to call an IPNS resolver to get the IPFS address
+
+    this.persistenceService.lsIpns();
+
+    /*
     const publication = await this.persistenceService.catPathJson<Publication>(
       `${publication_subdomain}/${PublicationService.INDEX_FILENAME}`
     );
+    */
 
     Validator.throwIfInvalid(publication, PublicationValidator);
     return publication;

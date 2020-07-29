@@ -1,6 +1,8 @@
 export interface Article {
   index: string;
   content: {
+    // Add Eth Transation here
+    // Add Date here as well
     title: string;
     subtitle?: string;
     body: string;

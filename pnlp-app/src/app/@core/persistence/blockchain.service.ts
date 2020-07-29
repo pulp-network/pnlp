@@ -58,6 +58,9 @@ export class BlockchainService {
         throw new BlockchainError(error.data.message.replace('VM Exception while processing transaction: revert ', ''));
       }
     }
+
+    // TODO DIMETRADON
+    // Return Transaction hash
   }
 
   public async getPublication(publication_subdomain: string): Promise<Publication | null> {
@@ -131,6 +134,9 @@ export class BlockchainService {
         throw new BlockchainError(error.data.message.replace('VM Exception while processing transaction: revert ', ''));
       }
     }
+
+    // TODO DIMETRADON
+    // Return Transaction hash
   }
 
   public async getAccount(): Promise<EthereumAddress> {

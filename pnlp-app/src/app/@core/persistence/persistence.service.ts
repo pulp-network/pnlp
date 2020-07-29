@@ -44,24 +44,20 @@ export class PersistenceService {
 
   public async catPathJson<T>(path: string, progress?: (num?: number) => void): Promise<T> {
     await this.initializeBucketIfNecessary();
-
     const request = this.bucketMap.get(this.selectedBucketKey).pullPath(this.selectedBucketKey, path, { progress });
-    const { value } = await request.next();
-    let str = '';
-    for (var i = 0; i < value.length; i++) {
-      str += String.fromCharCode(parseInt(value[i]));
-    }
-    const contents_as_json: T = JSON.parse(str);
-    return contents_as_json;
+    return await this.convertRequestToJson(request);
   }
 
   public async catIpfsJson<T>(path: string, progress?: (num?: number) => void): Promise<T> {
     await this.initializeBucketIfNecessary();
-
     const request = this.bucketMap.get(this.selectedBucketKey).pullIpfsPath(path, { progress });
+    return await this.convertRequestToJson(request);
+  }
+
+  private async convertRequestToJson<T>(request: AsyncIterableIterator<Uint8Array>): Promise<T> {
     const { value } = await request.next();
     let str = '';
-    for (var i = 0; i < value.length; i++) {
+    for (let i = 0; i < value.length; i++) {
       str += String.fromCharCode(parseInt(value[i]));
     }
     const contents_as_json: T = JSON.parse(str);

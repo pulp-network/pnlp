@@ -69,7 +69,7 @@ export class PublicationService {
     // TODO https://filecoinproject.slack.com/archives/G015YUYA7CJ/p1595349380433800
     // We need to call an IPNS resolver to get the IPFS address
 
-    this.persistenceService.lsIpns();
+    this.persistenceService.lsIpns(publication.ipns_hash.value);
 
     /*
     const publication = await this.persistenceService.catPathJson<Publication>(
@@ -77,6 +77,9 @@ export class PublicationService {
     );
     */
 
+    // Perhaps instead of using a validator like this,
+    // we could use a common class accross the front-end and the blockchain part?
+    // We could then put the Validator function in the class.
     Validator.throwIfInvalid(publication, PublicationValidator);
     return publication;
   }

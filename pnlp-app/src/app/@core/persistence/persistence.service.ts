@@ -79,12 +79,12 @@ export class PersistenceService {
     console.debug('initializing bucket map...');
 
     // TODO: maybe we can kill identity service
-    const identity = await this.identityService.getIdentity(IdentitySource.LIB_P2P_RANDOM);
+    await this.identityService.initalizeIdentity();
 
     // TODO: talk to textile team about options here
     const buckets = await Buckets.withKeyInfo(this.auth);
     // Authorize the user and your insecure keys with getToken
-    await buckets.getToken(identity);
+    await buckets.getToken(this.identityService.identity.value);
 
     const root = await buckets.open('com.textile.io');
     if (!root) {

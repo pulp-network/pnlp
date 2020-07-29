@@ -56,10 +56,9 @@ export class PersistenceService {
 
   private async convertRequestToJson<T>(request: AsyncIterableIterator<Uint8Array>): Promise<T> {
     const { value } = await request.next();
-    let str = '';
-    for (let i = 0; i < value.length; i++) {
-      str += String.fromCharCode(parseInt(value[i]));
-    }
+    const str: string = value
+      .map((el: string) => String.fromCharCode(parseInt(el, 10)))
+      .reduce((accumulator: string, currentValue: string) => accumulator + currentValue, '');
     const contents_as_json: T = JSON.parse(str);
     return contents_as_json;
   }

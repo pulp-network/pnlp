@@ -22,18 +22,6 @@ export class PersistenceService {
 
   constructor(private identityService: IdentityService) {}
 
-  private async initializeBucketIfNecessary() {
-    if (!this.isInitialized()) {
-      const { default_key, map } = await this.initBucketMap();
-      this.selectedBucketKey = default_key;
-      this.bucketMap = map;
-    }
-  }
-
-  private isInitialized() {
-    return this.selectedBucketKey && this.bucketMap && this.bucketMap.size;
-  }
-
   public async writeData(path: string, content: any): Promise<LinksReply.AsObject> {
     await this.initializeBucketIfNecessary();
 
@@ -78,6 +66,18 @@ export class PersistenceService {
     }
     const contents_as_json: T = JSON.parse(str);
     return contents_as_json;
+  }
+
+  private async initializeBucketIfNecessary() {
+    if (!this.isInitialized()) {
+      const { default_key, map } = await this.initBucketMap();
+      this.selectedBucketKey = default_key;
+      this.bucketMap = map;
+    }
+  }
+
+  private isInitialized() {
+    return this.selectedBucketKey && this.bucketMap && this.bucketMap.size;
   }
 
   private async initBucketMap(): Promise<{ default_key: string; map: Map<string, Buckets> }> {

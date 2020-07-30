@@ -1,21 +1,31 @@
 export interface Article {
-  index: string;
+  slug: string;
+  timestamp: Date;
+  author: string;
+  edit_of?: string; // ipfs hash of parent (for which this represents a modification)
+  retracted?: boolean;
   content: {
-    // Add Eth Transation here
-    // Add Date here as well
     title: string;
     subtitle?: string;
     body: string;
   };
 }
 
-export const ValidArticleIndex = /^[a-zA-Z0-9-_]+$/;
+export const ValidArticleSlug = /^[a-zA-Z0-9-_]+$/;
 
 export const ArticleValidator = (article: Article): string => {
   let err = '';
   let delimiter = '';
-  if (!article.index) {
-    err += delimiter + 'index';
+  if (!article.slug) {
+    err += delimiter + 'slug';
+    delimiter = ', ';
+  }
+  if (!article.timestamp) {
+    err += delimiter + 'timestamp';
+    delimiter = ', ';
+  }
+  if (!article.author) {
+    err += delimiter + 'author';
     delimiter = ', ';
   }
   if (!article.content) {

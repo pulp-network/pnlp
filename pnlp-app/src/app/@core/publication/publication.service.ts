@@ -3,83 +3,79 @@ import { LinksReply, ListPathItem } from '@textile/buckets-grpc/buckets_pb';
 import { Article, ArticleValidator } from '../../model/Article';
 import { Publication, PublicationValidator } from '../../model/Publication';
 import { Validator } from '../../model/Validator';
+import { BlockchainService, IPFSHash, IPNSHash, TransactionResult } from '../persistence/blockchain.service';
 import { PersistenceService } from '../persistence/persistence.service';
-import { BlockchainService, IPNSHash, IPFSHash } from '../persistence/blockchain.service';
+import { IpnsResolutionService } from '../resolution/ipns-resolution.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PublicationService {
-  private static INDEX_FILENAME = 'index.json';
+  private static INDEX_FILENAME = '.pulp.json';
   private static RESERVED_NAMES = ['.textileseed'];
   private static ROOT = '/';
 
-  constructor(private persistenceService: PersistenceService, private blockchainService: BlockchainService) {}
+  constructor(
+    private persistenceService: PersistenceService,
+    private blockchainService: BlockchainService,
+    private ipnsResolutionService: IpnsResolutionService
+  ) {}
 
   public async createPublication(
     publication: Publication
-  ): Promise<{ publication: Publication; links: LinksReply.AsObject }> {
+  ): Promise<{ publication: Publication; links: LinksReply.AsObject; transaction: TransactionResult }> {
     Validator.throwIfInvalid(publication, PublicationValidator);
 
-    console.debug(`creating a new publication: ${JSON.stringify(publication.metadata)}; at ${publication.subdomain}`);
+    console.debug(`creating a new publication: ${JSON.stringify(publication)}`);
     const links = await this.persistenceService.writeData(
-      `${publication.subdomain}/${PublicationService.INDEX_FILENAME}`,
+      `${publication.slug}/${PublicationService.INDEX_FILENAME}`,
       publication
     );
+    console.debug('links: ', links);
 
-    // TODO:DIMETREDON
-    // (1) ng g service blockchain
-    // (2) using ethers, create transaction invoking contract
-    // (3) ask metamask to sign it
-    // (4) broadcast transaction using infura, metamask, ...
+    const ipns_addr = links.ipns.replace('https://hub.textile.io/', '');
 
-    await this.blockchainService.createPublication(publication.subdomain, new IPNSHash(''));
+    const transaction = await this.blockchainService.createPublication(publication.slug, new IPNSHash(ipns_addr));
 
     return {
+      transaction,
       publication,
       links,
     };
   }
 
-  public async createArticle(publication_subdomain: string, article: Article): Promise<LinksReply.AsObject> {
+  public async createArticle(publication_slug: string, article: Article): Promise<LinksReply.AsObject> {
     Validator.throwIfInvalid(article, ArticleValidator);
     console.debug(
-      `publishing article: ${article.content.title}; ${article.content.subtitle}; content length ${article.content.body.length}`
+      `publishing article ${article.slug}; ${article.content.title}; subtitle length ${article.content.subtitle?.length}; content length ${article.content.body.length}`
     );
-    const linksReply = await this.persistenceService.writeData(`${publication_subdomain}/${article.index}`, article);
+    const links = await this.persistenceService.writeData(`${publication_slug}/${article.slug}`, article);
+    console.debug('links: ', links);
 
-    const PUT_TX_IN_HERE = await this.blockchainService.publishArticle(publication_subdomain, new IPFSHash());
+    const transaction = await this.blockchainService.publishArticle(publication_slug, new IPFSHash());
 
-    // Check it out DIMETRADON and DP-KB
-    // TODO we need to write to index.json of the publication on Textile
-    // We should have a map of artticle name to transaction hash
-    // Then we can show it on an ethereum explorer.
+    // update publication with new transaction ID and article slug
+    await this.addArticleToPublicationIndex(publication_slug, article, transaction.hash);
 
-    return linksReply;
+    return links;
   }
 
-  public async getPublication(publication_subdomain: string): Promise<Publication> {
-    console.debug(`fetching ${publication_subdomain}...`);
+  public async getPublication(publication_slug: string): Promise<Publication> {
+    console.debug(`fetching ${publication_slug}...`);
 
-    // TODO:DIMETREDON
-    // (1) using infura, metamask, ...
-    // (2) call getPublication(publication_subdomain)
-    const publication = await this.blockchainService.getPublication(publication_subdomain);
+    const publication_record = await this.blockchainService.getPublication(publication_slug);
 
-    // TODO https://filecoinproject.slack.com/archives/G015YUYA7CJ/p1595349380433800
-    // We need to call an IPNS resolver to get the IPFS address
+    // TODO: for dp-kb testing purposes, we can remove this when ERROR_1 is fixed
+    // const publication_record = {
+    //   ipns_hash: new IPNSHash('bafzbeiceh6wcfjlwn5fhny7s7o63velb2vbcekskejrc36a4fhegnof7py')
+    // }
 
-    this.persistenceService.lsIpns(publication.ipns_hash.value);
+    const ipfs_hash = await this.ipnsResolutionService.resolveIpns(publication_record.ipns_hash);
 
-    /*
-    const publication = await this.persistenceService.catPathJson<Publication>(
-      `${publication_subdomain}/${PublicationService.INDEX_FILENAME}`
+    const publication = await this.persistenceService.catIpfsJson<Publication>(
+      `${ipfs_hash.value}/${publication_slug}/${PublicationService.INDEX_FILENAME}`
     );
-    */
 
-    // Perhaps instead of using a validator like this,
-    // we could use a common class accross the front-end and the blockchain part?
-    // We could then put the Validator function in the class.
     Validator.throwIfInvalid(publication, PublicationValidator);
     return publication;
   }
@@ -96,15 +92,15 @@ export class PublicationService {
   }
 
   public async listArticles(
-    publication_subdomain: string
+    publication_slug: string
   ): Promise<{ publication: Publication; article_refs: ListPathItem.AsObject[] }> {
-    console.debug(`listing articles from: ${publication_subdomain}...`);
-    const pathReply = await this.persistenceService.lsIpns(`${publication_subdomain}`).catch((err) => {
-      throw new Error(`We looked high and low for ${publication_subdomain} but we can't find it right now`);
+    console.debug(`listing articles from: ${publication_slug}...`);
+    const pathReply = await this.persistenceService.lsIpns(`${publication_slug}`).catch((err) => {
+      throw new Error(`We looked high and low for ${publication_slug} but we can't find it right now`);
     });
 
     if (!pathReply.item) {
-      throw new Error(`We looked high and low for ${publication_subdomain} but we can't find it right now`);
+      throw new Error(`We looked high and low for ${publication_slug} but we can't find it right now`);
     }
 
     const index = pathReply.item.itemsList.find((i) => i.name === PublicationService.INDEX_FILENAME);
@@ -117,16 +113,28 @@ export class PublicationService {
     };
   }
 
-  public async getArticle(publication_subdomain: string, article_index: string): Promise<Article> {
-    console.debug(`fetching article: pnlp/${publication_subdomain}/${article_index}...`);
-    const article = await this.persistenceService.catPathJson<Article>(`${publication_subdomain}/${article_index}`);
+  public async getArticle(publication_slug: string, article_index: string): Promise<Article> {
+    console.debug(`fetching article: pnlp/${publication_slug}/${article_index}...`);
+    const article = await this.persistenceService.catPathJson<Article>(`${publication_slug}/${article_index}`);
 
     if (!article) {
-      throw new Error(`Article pnlp/${publication_subdomain}/${article_index} does not exist or is not visible`);
+      throw new Error(`Article pnlp/${publication_slug}/${article_index} does not exist or is not visible`);
     }
 
     Validator.throwIfInvalid(article, ArticleValidator);
     return article;
+  }
+
+  private async addArticleToPublicationIndex(publication_slug: string, article: Article, transactionHash: string) {
+    const publication = await this.getPublication(publication_slug);
+    publication.articles = publication.articles || {};
+    publication.articles[article.slug] = {
+      tx: transactionHash,
+      title: article.content.title,
+      timestamp: article.timestamp,
+    };
+
+    await this.persistenceService.writeData(`${publication.slug}/${PublicationService.INDEX_FILENAME}`, publication);
   }
 
   private async readIndex(ipfs_address: string) {
@@ -134,6 +142,7 @@ export class PublicationService {
       if (!ipfs_address) {
         throw new Error('Index path does not exist');
       }
+      console.debug('Reading index file at: ', ipfs_address);
       const publication = await this.persistenceService.catIpfsJson<Publication>(ipfs_address);
       Validator.throwIfInvalid(publication, PublicationValidator);
       return publication;

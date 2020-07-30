@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { from, Observable, Subscription } from 'rxjs';
 import { PublicationService } from '../../@core/publication/publication.service';
-import { Article, ValidArticleIndex } from '../../model/Article';
+import { Article, ValidArticleSlug } from '../../model/Article';
 import { Publication } from '../../model/Publication';
 
 @Component({
@@ -30,21 +30,21 @@ export class NewArticleComponent implements OnInit {
   submissionError: string;
   loadingError: string;
 
-  get indexError() {
+  get slugError() {
     if (!this.articleForm) {
       return '';
     }
-    return this.articleForm.controls.indexControl.hasError('pattern')
+    return this.articleForm.controls.slugControl.hasError('pattern')
       ? 'no punctuation besides underscores and dashes please'
-      : this.articleForm.controls.indexControl.hasError('maxlength')
+      : this.articleForm.controls.slugControl.hasError('maxlength')
       ? 'no more than 48 characters please'
-      : this.articleForm.controls.indexControl.hasError('minlength')
+      : this.articleForm.controls.slugControl.hasError('minlength')
       ? 'at least 3 characters please'
       : '';
   }
 
-  get showIndexError() {
-    return !this.articleForm.controls.indexControl.valid && this.articleForm.controls.indexControl.dirty;
+  get showSlugError() {
+    return !this.articleForm.controls.slugControl.valid && this.articleForm.controls.slugControl.dirty;
   }
 
   constructor(private publicationService: PublicationService, private route: ActivatedRoute, private router: Router) {}
@@ -84,16 +84,16 @@ export class NewArticleComponent implements OnInit {
     this.articleForm = new FormGroup({
       titleControl: new FormControl('', [Validators.required]),
       subtitleControl: new FormControl('', []),
-      indexControl: new FormControl('', [
-        Validators.pattern(ValidArticleIndex),
+      slugControl: new FormControl('', [
+        Validators.pattern(ValidArticleSlug),
         Validators.maxLength(48),
         Validators.minLength(3),
       ]),
     });
     this.titleSubscription = this.articleForm.controls.titleControl.valueChanges.subscribe((val) => {
-      if (!this.articleForm.controls.indexControl.dirty) {
+      if (!this.articleForm.controls.slugControl.dirty) {
         const suggestedUrl = this.getSuggestedUrl(val);
-        this.articleForm.controls.indexControl.setValue(suggestedUrl);
+        this.articleForm.controls.slugControl.setValue(suggestedUrl);
       }
     });
   }
@@ -105,7 +105,7 @@ export class NewArticleComponent implements OnInit {
     this.publicationService
       .createArticle(this.publicationSubdomain, article)
       .then((_) => {
-        this.router.navigate(['pnlp', this.publicationSubdomain, article.index]);
+        this.router.navigate(['pnlp', this.publicationSubdomain, article.slug]);
       })
       .catch((err) => (this.submissionError = err))
       .finally(() => (this.isCreating = false));
@@ -113,7 +113,9 @@ export class NewArticleComponent implements OnInit {
 
   private mapFormToArticle(): Article {
     return {
-      index: this.articleForm.controls.indexControl.value,
+      slug: this.articleForm.controls.slugControl.value,
+      timestamp: new Date(),
+      author: 'TODO: get author identity',
       content: {
         title: this.articleForm.controls.titleControl.value,
         subtitle: this.articleForm.controls.subtitleControl.value,

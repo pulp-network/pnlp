@@ -1,0 +1,3 @@
+- refactor pulp protocol interaction code into typescript library
+- add a second client using the ts library. react?
+- add a second implementation

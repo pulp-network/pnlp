@@ -6,6 +6,7 @@
 - overall great experience
 - add an angular build image to defaults? (`trion/ng-cli` is a popular one, though notably it doesn't work out of the box because the default user doesn't have write access to `/`. I wrapped it in `pnlp/build-image` and switched users to root)
 - container user needs to be able to write to / (largely obvious, but worth calling out. mine wasn't)
+- `Base Directory` is not an option in the initial setup
 - make it clear that `Publish directory` is _relative to_ `Base directory` (again, largely obvious but something I missed initially)
 - it would be nice to have a "Disable" switch to temporarily stop a "Deployment": There is a line that says: "Auto publishing is on." but I see no straightforward way to temporarily turn it Off without deleting the entire pipeline.
 

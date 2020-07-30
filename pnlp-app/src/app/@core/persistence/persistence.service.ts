@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { LinksReply, ListPathReply } from '@textile/buckets-grpc/buckets_pb';
 import { Buckets, KeyInfo } from '@textile/hub';
 import { IdentityService } from '../identity/identity.service';
-import { IdentitySource } from '../identity/IdentitySource';
 
 @Injectable({
   providedIn: 'root',
@@ -33,13 +32,8 @@ export class PersistenceService {
 
   public async lsIpns(path: string): Promise<ListPathReply.AsObject> {
     await this.initializeBucketIfNecessary();
-
-    // TODO DIMETRADON
-    // Goal 1 List contents of IPNS directory here.
-    // Subtask of goal if can't do in one call: Add IPNS resolver here.
-
-    // TODO I am pretty sure that this next line is broken.
-    return this.bucketMap.get(this.selectedBucketKey).listPath(this.selectedBucketKey, path);
+    const res = await this.bucketMap.get(this.selectedBucketKey).listPath(this.selectedBucketKey, path);
+    return res;
   }
 
   public async catPathJson<T>(path: string, progress?: (num?: number) => void): Promise<T> {
@@ -56,10 +50,8 @@ export class PersistenceService {
 
   private async convertRequestToJson<T>(request: AsyncIterableIterator<Uint8Array>): Promise<T> {
     const { value } = await request.next();
-    const str: string = value
-      .map((el: string) => String.fromCharCode(parseInt(el, 10)))
-      .reduce((accumulator: string, currentValue: string) => accumulator + currentValue, '');
-    const contents_as_json: T = JSON.parse(str);
+    const res = new TextDecoder('utf-8').decode(value);
+    const contents_as_json: T = JSON.parse(res);
     return contents_as_json;
   }
 

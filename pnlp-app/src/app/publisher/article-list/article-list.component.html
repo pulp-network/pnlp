@@ -6,10 +6,10 @@
     <div class="d-flex justify-content-between">
       <div>
         <div class="lead">
-          {{ (articleList$ | async)?.publication?.metadata?.name }}
+          {{ (articleList$ | async)?.publication?.name }}
         </div>
         <div class="small text-muted mb-3">
-          {{ (articleList$ | async)?.publication?.metadata?.description }}
+          {{ (articleList$ | async)?.publication?.description }}
         </div>
       </div>
       <div>
@@ -17,9 +17,10 @@
           type="submit"
           class="btn btn-primary"
           [routerLink]="'/write'"
-          [queryParams]="{ publication: publicationSubdomain }"
+          [queryParams]="{ publication: publicationSlug }"
         >
           Start Writing
+          <!-- TODO:SVGS: consolidate these -->
           <svg
             width="1.5em"
             height="1.5em"

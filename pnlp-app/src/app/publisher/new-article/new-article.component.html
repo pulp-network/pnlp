@@ -6,6 +6,7 @@
     <div *ngIf="!previewMode">
       <div class="text-muted lead mb-4">
         <button type="button" class="btn btn-light" [routerLink]="['/pnlp', (publication$ | async)?.subdomain]">
+          <!-- TODO:SVGS: consolidate these -->
           <svg
             width="1.5em"
             height="1.5em"
@@ -20,7 +21,7 @@
             />
             <path fill-rule="evenodd" d="M4.5 8a.5.5 0 0 1 .5-.5h6.5a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5z" />
           </svg>
-          {{ (publication$ | async)?.metadata?.name }}
+          {{ (publication$ | async)?.name }}
         </button>
       </div>
 
@@ -53,22 +54,22 @@
         <div class="form-group">
           <div class="input-group input-group-sm">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="article-index-desc">
+              <span class="input-group-text" id="article-slug-desc">
                 https://{{ (publication$ | async)?.subdomain }}.on.pnlp.network/
               </span>
             </div>
             <input
               type="text"
               class="form-control"
-              formControlName="indexControl"
+              formControlName="slugControl"
               required
-              id="article-index"
-              aria-describedby="article-index-desc"
+              id="article-slug"
+              aria-describedby="article-slug-desc"
             />
           </div>
           <div>
-            <small class="form-text text-muted" *ngIf="showIndexError; else empty">
-              {{ indexError }}
+            <small class="form-text text-muted" *ngIf="showSlugError; else empty">
+              {{ slugError }}
             </small>
             <ng-template #empty><small>&emsp;</small></ng-template>
           </div>
@@ -85,6 +86,7 @@
             [ngModelOptions]="{ standalone: true }"
           >
           </md-editor>
+          <!-- TODO:HELP_LINKS: add help links here to markdown docs -->
         </div>
 
         <div class="d-flex justify-content-end mb-5">
@@ -111,6 +113,7 @@
     <div *ngIf="previewMode">
       <div class="d-flex justify-content-between">
         <button type="button" class="align-self-center btn btn-secondary" (click)="togglePreviewMode()">
+          <!-- TODO:SVGS: consolidate these -->
           <svg
             width="1.5em"
             height="1.5em"
@@ -129,7 +132,7 @@
         </button>
 
         <button type="button" class="align-self-center btn btn-primary" (click)="submit()">
-          Publish
+          {{ isCreating ? 'Publishing...' : 'Publish' }}
         </button>
       </div>
 
@@ -138,7 +141,7 @@
           <hr />
         </div>
         <div class="col-auto small text-muted">
-          https://{{ (publication$ | async)?.subdomain }}.on.pnlp.network/{{ previewArticle.index }}
+          https://{{ (publication$ | async)?.subdomain }}.on.pnlp.network/{{ previewArticle.slug }}
         </div>
         <div class="col mb-2">
           <hr />

@@ -40,20 +40,20 @@
               <input
                 type="text"
                 placeholder="E.g 'nyrhymes'"
-                formControlName="subdomainControl"
+                formControlName="slugControl"
                 required
                 class="form-control"
                 id="publication-url"
                 aria-describedby="publication-url-desc"
-                aria-invalid="showSubdomainError"
+                aria-invalid="showSlugError"
               />
               <div class="input-group-append">
                 <span class="input-group-text" id="publication-url-desc">.on.pnlp.network</span>
               </div>
             </div>
             <div>
-              <small class="form-text text-muted" *ngIf="showSubdomainError; else empty">
-                {{ subdomainError }}
+              <small class="form-text text-muted" *ngIf="showSlugError; else empty">
+                {{ slugError }}
               </small>
               <ng-template #empty><small>&emsp;</small></ng-template>
             </div>

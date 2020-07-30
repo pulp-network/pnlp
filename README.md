@@ -8,20 +8,21 @@ pnlp (pronounced "pulp") is an open publishing platform for written content.
 
 - clone this repo
 - cd `pnlp/pnlp-app`
+- `npm install`
+- `npm install -g ganache-cli`
+
+## To run the smart contracts against a local testnet
+
+- Run `ganache-cli` in a new terminal.
 
 ## To run the frontend
 
-- `npm install`
-- `npm start`
+- Open another terminal
+- `cd pnlp-contract && truffle build && truffle migrate`
+- `cd ../pnlp-app && npm start`
 - [http://localhost:4200](http://localhost:4200)
 - during HackFS, use [FEEDBACK.md](https://github.com/pnlp-network/pnlp/blob/master/FEEDBACK.md) to list all (even minor) interactive trouble with positive and critical feedback for other teams we're interacting with. This is helpful to the community at large.
 - use [LOG.md](https://github.com/pnlp-network/pnlp/blob/master/LOG.md) to make high level notes about new accomplishments/progress/challenges on any given day. We hope to be able to start blogging about the development of `pnlp` _on_ `pnlp` itself and LOG.md can serve as the bones of many articles.
-
-## To run the smart contract
-
-- Run `ganache-cli` in a new terminal. To install Ganche the first time, run `npm install -g ganache-cli`.
-- Open another terminal
-- `cd pnlp-contract && truffle build && truffle migrate`
 
 # Stack
 

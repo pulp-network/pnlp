@@ -27,6 +27,9 @@ export class IdentityService {
   }
 
   public async initalizeIdentity(): Promise<void> {
+    if (!!this.identity.getValue()) {
+      return;
+    }
     const ethereumAddress = await this.blockchainService.getAccount();
     const ipns_identity = await this.keystoreService.generateLibp2pCryptoIdentity(ethereumAddress);
     this.identity.next({

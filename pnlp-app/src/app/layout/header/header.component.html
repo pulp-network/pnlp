@@ -29,10 +29,22 @@
             </div>
           </div>
 
-          <div class="nav-item mr-1" *ngIf="ethAddress$ | async">
-            <button type="button" class="btn btn-light" (click)="signout()">
+          <div *ngIf="ethAddress$ | async" class="nav-item mr-1" ngbDropdown>
+            <a id="account-dropdown" class="nav-link" ngbDropdownToggle>
               {{ (ethAddress$ | async)?.slice(0, 10) + '...' }}
-            </button>
+            </a>
+            <div ngbDropdownMenu aria-labelledby="account-dropdown" class="dropdown-menu">
+              <button
+                class="dropdown-item"
+                *ngFor="let publication of myPublications$ | async"
+                [routerLink]="['/pnlp', (publication | async)?.slug]"
+              >
+                {{ publication }}
+              </button>
+              <button class="dropdown-item" (click)="signout()">
+                Sign Out
+              </button>
+            </div>
           </div>
 
           <div class="nav-item mr-1" *ngIf="!(ethAddress$ | async)">

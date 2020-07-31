@@ -5,7 +5,7 @@
   <div class="flex-grow-1">
     <div *ngIf="!previewMode">
       <div class="text-muted lead mb-4">
-        <button type="button" class="btn btn-light" [routerLink]="['/pnlp', (publication$ | async)?.subdomain]">
+        <button type="button" class="btn btn-light" [routerLink]="['/pnlp', (publication$ | async)?.slug]">
           <!-- TODO:SVGS: consolidate these -->
           <svg
             width="1.5em"
@@ -55,7 +55,7 @@
           <div class="input-group input-group-sm">
             <div class="input-group-prepend">
               <span class="input-group-text" id="article-slug-desc">
-                https://{{ (publication$ | async)?.subdomain }}.on.pnlp.network/
+                https://{{ (publication$ | async)?.slug }}.on.pnlp.network/
               </span>
             </div>
             <input
@@ -141,7 +141,7 @@
           <hr />
         </div>
         <div class="col-auto small text-muted">
-          https://{{ (publication$ | async)?.subdomain }}.on.pnlp.network/{{ previewArticle.slug }}
+          https://{{ (publication$ | async)?.slug }}.on.pnlp.network/{{ previewArticle.slug }}
         </div>
         <div class="col mb-2">
           <hr />

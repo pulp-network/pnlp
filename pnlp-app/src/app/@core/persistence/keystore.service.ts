@@ -53,7 +53,7 @@ export class KeystoreService {
       '******************************************************************************** \n' +
       'The Ethereum address used by this application is: \n' +
       '\n' +
-      ethereum_address.value.toHexString() +
+      ethereum_address.value +
       '\n' +
       '\n' +
       '\n' +

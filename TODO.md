@@ -1,12 +1,8 @@
 # TODO
 
-**TODO:ERROR_1**dimetradon
+**TODO:RETURN_TYPES: IPNS/IPFS**
 
-- contract.functions.publications()
-
-**TODO:ERROR_2**dp-kb
-
-- contract.functions.publishArticle()
+- we should use the strong types across the codebase for ipns and ipfs
 
 ## **TODO:AWAIT_TRANSACTION**
 
@@ -28,6 +24,7 @@
 - TODO:PRISM: fix code highlighting in markdown: see "Prism not found" error in browser on pageload
 - TODO:HELP_LINKS: add help links to markdown spec, emoji spec, etc https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md
 - rename article-list page to publication-home page
+- TODO:ADD_IPFS: add article ipfs address on article creation in .pulp.json
 
 ## Burner
 

@@ -4,6 +4,7 @@ import { UserService } from '@app/user';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IdentityService, PnlpIdentity } from '../../@core/identity/identity.service';
+import { PublicationService } from '../../@core/publication/publication.service';
 
 @Component({
   selector: 'app-header',
@@ -14,15 +15,21 @@ export class HeaderComponent implements OnInit {
   menuHidden = true;
   observableIdentity$: Observable<PnlpIdentity>;
   ethAddress$: Observable<string>;
+  myPublications$: Observable<string[]>; //TODO:get publication list on identity load
 
-  constructor(private router: Router, private userService: UserService, private identityService: IdentityService) {}
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private identityService: IdentityService,
+    private publicationService: PublicationService
+  ) {}
 
   ngOnInit() {
     // this.identityService.loadEthereumAddress();
     this.observableIdentity$ = this.identityService.observableIdentity;
     this.ethAddress$ = this.observableIdentity$.pipe(
       map((i) => {
-        return i?.ethereum_identity?.value?.toHexString();
+        return i?.ethereum_identity?.value;
       })
     );
   }

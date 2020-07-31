@@ -23,7 +23,7 @@ export class PublicationService {
 
   public async createPublication(
     publication: Publication
-  ): Promise<{ publication: Publication; links: LinksReply.AsObject; transaction: TransactionResult }> {
+  ): Promise<{ publication: Publication; ipns_address: IPNSHash; transaction: TransactionResult }> {
     Validator.throwIfInvalid(publication, PublicationValidator);
 
     console.debug(`creating a new publication: ${JSON.stringify(publication)}`);
@@ -33,14 +33,14 @@ export class PublicationService {
     );
     console.debug('links: ', links);
 
-    const ipns_addr = links.ipns.replace('https://hub.textile.io/', '');
+    const ipns_address = new IPNSHash(links.ipns.replace('https://hub.textile.io/', ''));
 
-    const transaction = await this.blockchainService.createPublication(publication.slug, new IPNSHash(ipns_addr));
+    const transaction = await this.blockchainService.createPublication(publication.slug, ipns_address);
 
     return {
       transaction,
       publication,
-      links,
+      ipns_address,
     };
   }
 

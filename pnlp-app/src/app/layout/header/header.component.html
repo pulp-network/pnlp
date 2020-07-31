@@ -1,7 +1,7 @@
 <header>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-      <a href="/home"><img src="assets/pnlp.png" alt="pulp logo" height="30px" /></a>
+      <a [routerLink]="['/home']"><img src="assets/pnlp.png" alt="pulp logo" height="30px" /></a>
       <button
         class="navbar-toggler"
         type="button"
@@ -29,11 +29,17 @@
             </div>
           </div>
 
-          <div class="nav-item mr-1" *ngIf="!isAuthenticated">
-            <a class="btn btn-light btn-md" href="/sign-in" role="button">Sign In</a>
+          <div class="nav-item mr-1" *ngIf="ethAddress$ | async">
+            <button type="button" class="btn btn-light" (click)="signout()">
+              {{ (ethAddress$ | async)?.slice(0, 10) + '...' }}
+            </button>
           </div>
 
-          <div class="nav-item" *ngIf="!isAuthenticated">
+          <div class="nav-item mr-1" *ngIf="!(ethAddress$ | async)">
+            <button type="button" class="btn btn-light" (click)="signin()">Sign In</button>
+          </div>
+
+          <div class="nav-item" *ngIf="!(ethAddress$ | async)">
             <a class="btn btn-primary btn-md" href="/" role="button">Get Started</a>
           </div>
         </div>

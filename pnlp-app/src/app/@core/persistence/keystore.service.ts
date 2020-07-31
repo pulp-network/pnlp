@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { EthereumAddress, BlockchainService } from './blockchain.service';
-import { keys as libp2p_crypto_keys } from 'libp2p-crypto';
-// import { keys as threads_crypto_keys } from '@textile/threads-crypto';
-import { utils, BigNumber } from 'ethers';
-import { Ed25519PrivateKey as threads_crypto_Ed25519PrivateKey } from '@textile/threads-crypto/dist/ed25519';
 import { Libp2pCryptoIdentity } from '@textile/threads-core';
+import { Ed25519PrivateKey as threads_crypto_Ed25519PrivateKey } from '@textile/threads-crypto/dist/ed25519';
+// import { keys as threads_crypto_keys } from '@textile/threads-crypto';
+import { BigNumber, utils } from 'ethers';
+import { keys as libp2p_crypto_keys } from 'libp2p-crypto';
+import { BlockchainService, EthereumAddress } from './blockchain.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,13 +21,16 @@ export class KeystoreService {
 
   constructor(private blockchainService: BlockchainService) {}
 
-  public async generateLibp2pCryptoIdentity(): Promise<Libp2pCryptoIdentity> {
-    return new Libp2pCryptoIdentity(await this.generateKeyPair());
+  public async generateLibp2pCryptoIdentity(ethereumAddress: EthereumAddress): Promise<Libp2pCryptoIdentity> {
+    const private_key = await this.generateKeyPair(ethereumAddress);
+    return new Libp2pCryptoIdentity(private_key);
   }
 
   // Modified from https://github.com/textileio/js-threads/blob/master/packages/crypto/src/ed25519.ts
-  private async generateKeyPair(): Promise<threads_crypto_Ed25519PrivateKey> {
-    const key: libp2p_crypto_keys.supportedKeys.ed25519.Ed25519PrivateKey = await this.generatePrivateKey();
+  private async generateKeyPair(ethereumAddress: EthereumAddress): Promise<threads_crypto_Ed25519PrivateKey> {
+    const key: libp2p_crypto_keys.supportedKeys.ed25519.Ed25519PrivateKey = await this.generatePrivateKey(
+      ethereumAddress
+    );
     // The above line was:
     // await libp2p_crypto_keys.supportedKeys.ed25519.generateKeyPair()
     const bytes = key.marshal();
@@ -70,8 +73,9 @@ export class KeystoreService {
     );
   }
 
-  private async generatePrivateKey(): Promise<libp2p_crypto_keys.supportedKeys.ed25519.Ed25519PrivateKey> {
-    const ethereumAddress = await this.blockchainService.getAccount();
+  private async generatePrivateKey(
+    ethereumAddress: EthereumAddress
+  ): Promise<libp2p_crypto_keys.supportedKeys.ed25519.Ed25519PrivateKey> {
     const message = this.generateMessageForEntropy(ethereumAddress, 'pnlp');
     const signedText = await this.blockchainService.signText(message);
     const hash = utils.keccak256(signedText);
@@ -87,6 +91,6 @@ export class KeystoreService {
     // I looked through the library. This is the function that Textile uses Ed25519 deep down.
     // I also pass 1024 bits to this function, but it appears as if it is never used!
     // I think the number of bits is used for other crypto functions.
-    return await libp2p_crypto_keys.generateKeyPairFromSeed('Ed25519', Uint8Array.from(array), 1024);
+    return libp2p_crypto_keys.generateKeyPairFromSeed('Ed25519', Uint8Array.from(array), 1024);
   }
 }

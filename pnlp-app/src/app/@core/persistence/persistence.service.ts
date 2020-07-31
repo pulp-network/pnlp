@@ -21,6 +21,7 @@ export class PersistenceService {
 
   constructor(private identityService: IdentityService) {}
 
+  //TODO:RETURN_TYPES: IPNS/IPFS
   public async writeData(path: string, content: any): Promise<LinksReply.AsObject> {
     await this.initializeBucketIfNecessary();
 
@@ -32,18 +33,21 @@ export class PersistenceService {
 
   public async lsIpns(path: string): Promise<ListPathReply.AsObject> {
     await this.initializeBucketIfNecessary();
+    console.debug(`listPath: ${path}`);
     const res = await this.bucketMap.get(this.selectedBucketKey).listPath(this.selectedBucketKey, path);
     return res;
   }
 
   public async catPathJson<T>(path: string, progress?: (num?: number) => void): Promise<T> {
     await this.initializeBucketIfNecessary();
+    console.debug(`pullPath: ${path}`);
     const request = this.bucketMap.get(this.selectedBucketKey).pullPath(this.selectedBucketKey, path, { progress });
     return await this.convertRequestToJson(request);
   }
 
   public async catIpfsJson<T>(path: string, progress?: (num?: number) => void): Promise<T> {
     await this.initializeBucketIfNecessary();
+    console.debug(`pullIpfsPath: ${path}`);
     const request = this.bucketMap.get(this.selectedBucketKey).pullIpfsPath(path, { progress });
     return await this.convertRequestToJson(request);
   }

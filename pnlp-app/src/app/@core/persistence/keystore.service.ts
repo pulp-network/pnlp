@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { EthereumAddress, BlockchainService } from './blockchain.service';
-import { keys as libp2p_crypto_keys } from 'libp2p-crypto';
-// import { keys as threads_crypto_keys } from '@textile/threads-crypto';
-import { utils, BigNumber } from 'ethers';
-import { Ed25519PrivateKey as threads_crypto_Ed25519PrivateKey } from '@textile/threads-crypto/dist/ed25519';
 import { Libp2pCryptoIdentity } from '@textile/threads-core';
+import { Ed25519PrivateKey as threads_crypto_Ed25519PrivateKey } from '@textile/threads-crypto/dist/ed25519';
+// import { keys as threads_crypto_keys } from '@textile/threads-crypto';
+import { BigNumber, utils } from 'ethers';
+import { keys as libp2p_crypto_keys } from 'libp2p-crypto';
+import { BlockchainService, EthereumAddress } from './blockchain.service';
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +50,7 @@ export class KeystoreService {
       '******************************************************************************** \n' +
       'The Ethereum address used by this application is: \n' +
       '\n' +
-      ethereum_address.value.toHexString() +
+      ethereum_address.value +
       '\n' +
       '\n' +
       '\n' +

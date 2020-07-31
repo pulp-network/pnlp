@@ -1,15 +1,17 @@
 <app-loader *ngIf="isLoading"></app-loader>
 <app-error [error]="error"></app-error>
 
+{{ publication$ | async | json }}
+
 <div class="mt-4 d-flex justify-content-center" *ngIf="!isLoading && !error">
-  <div *ngIf="(articleList$ | async)?.publication" class="flex-grow-1">
+  <div *ngIf="publication$ | async" class="flex-grow-1">
     <div class="d-flex justify-content-between">
       <div>
         <div class="lead">
-          {{ (articleList$ | async)?.publication?.name }}
+          {{ (publication$ | async)?.name }}
         </div>
         <div class="small text-muted mb-3">
-          {{ (articleList$ | async)?.publication?.description }}
+          {{ (publication$ | async)?.description }}
         </div>
       </div>
       <div>
@@ -41,20 +43,20 @@
 
     <div class="list-group" *ngIf="!error">
       <a
-        *ngFor="let article of (articleList$ | async)?.article_refs"
+        *ngFor="let article of articles$ | async"
         class="list-group-item list-group-item-action"
-        [routerLink]="[article.name]"
+        [routerLink]="[article.slug]"
       >
         <div class="d-flex w-100 justify-content-between">
           <span>
-            {{ article?.name }}
+            {{ article?.title }}
           </span>
-          <small> CID: {{ article?.cid }} </small>
+          <small> IPFS: {{ article?.ipfs_address }} </small>
         </div>
       </a>
     </div>
 
-    <div *ngIf="!(articleList$ | async)?.article_refs.length" class="text-center">
+    <div *ngIf="!(publication$ | async)?.articles?.length" class="text-center">
       <img src="assets/pnlp-logo-grey@190.png" alt="pulp logo" height="190px" />
       <div class="lead text-muted">There are no articles here yet</div>
     </div>

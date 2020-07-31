@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BigNumber, Contract, providers } from 'ethers';
 // If this line fails when you build, please run `truffle build` from `pnlp-contract`.
-import ContractJson from '../../../../../pnlp-contract/build/contracts/pnlp.json';
+import ContractJson from './pnlp.json';
 
 class StrongType<Definition, Type> {
   private _type: Definition;
@@ -12,7 +12,7 @@ export class IPNSHash extends StrongType<'ipns', string> {}
 export class IPFSHash extends StrongType<'ipfs', string> {}
 
 export class EthereumTransaction extends StrongType<'ethereum_tx', string> {}
-export class EthereumAddress extends StrongType<'ethereum_address', BigNumber> {}
+export class EthereumAddress extends StrongType<'ethereum_address', string> {}
 
 export class PublicationRecord {
   constructor(public ipns_hash: IPNSHash, public author: EthereumAddress, public timestamp: Date) {}
@@ -41,9 +41,7 @@ type WindowInstanceWithEthereum = Window & typeof globalThis & { ethereum?: prov
 })
 export class BlockchainService {
   private contractAbi = ContractJson.abi;
-  private contractAddress: EthereumAddress = new EthereumAddress(
-    BigNumber.from('0x88D632D0266CE47608FAE77ff4D37344FE562f12')
-  );
+  private contractAddress: EthereumAddress = new EthereumAddress('0x88D632D0266CE47608FAE77ff4D37344FE562f12');
 
   private provider: providers.Web3Provider;
   private signer: providers.JsonRpcSigner;
@@ -67,6 +65,10 @@ export class BlockchainService {
         throw new BlockchainError(error.data.message.replace('VM Exception while processing transaction: revert ', ''));
       }
     }
+  }
+
+  public async awaitTransaction(transaction: string) {
+    // TODO:AWAIT_TRANSACTION;
   }
 
   public async getPublication(publication_slug: string): Promise<PublicationRecord | null> {
@@ -102,11 +104,12 @@ export class BlockchainService {
       `found publication at ${publication.ipnsHash} published by ${publication.author} on ${publication.timestamp}`
     );
 
-    return new PublicationRecord(
-      new IPNSHash(publication.ipnsHash),
-      new EthereumAddress(BigNumber.from(publication.author)),
+    const pub_record = new PublicationRecord(
+      new IPNSHash(publication.ipnsHash.replace('ipns/', '')),
+      new EthereumAddress(publication.author),
       new Date(publication.timestamp.toNumber() * 1000)
     );
+    return pub_record;
   }
 
   public async getArticle(ipfs_hash: IPFSHash): Promise<ArticleRecord | null> {
@@ -126,10 +129,7 @@ export class BlockchainService {
       return null;
     }
 
-    return new ArticleRecord(
-      new EthereumAddress(BigNumber.from(article.author)),
-      new Date(article.timestamp.toNumber() * 1000)
-    );
+    return new ArticleRecord(new EthereumAddress(article.author), new Date(article.timestamp.toNumber() * 1000));
   }
 
   public async publishArticle(publication_slug: string, ipfs_hash: IPFSHash): Promise<TransactionResult> {
@@ -173,7 +173,7 @@ export class BlockchainService {
       throw new BlockchainError('No account is provided. Please provide an account to this application.');
     }
 
-    return new EthereumAddress(BigNumber.from(accounts[0]));
+    return new EthereumAddress(accounts[0]);
   }
 
   public async signText(text: string): Promise<string> {
@@ -215,7 +215,7 @@ export class BlockchainService {
     console.debug('initializing web3 provider...');
     this.provider = new providers.Web3Provider((window as WindowInstanceWithEthereum).ethereum);
     this.signer = this.provider.getSigner();
-    this.contract = new Contract(this.contractAddress.value.toHexString(), this.contractAbi, this.signer);
+    this.contract = new Contract(this.contractAddress.value, this.contractAbi, this.signer);
 
     this.initialized = true;
   }

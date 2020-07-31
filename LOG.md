@@ -41,7 +41,7 @@
 ### 2020-07-12
 
 - added `new-publication` component
-- tried wrapping mind around coupling pnlp subdomains with ipfs addresses
+- tried wrapping mind around coupling pnlp slugs with ipfs addresses
 - realized we're going to want to use ipns addresses instead
 - added list pages for publication list and article list
 - trying to figure out how to map publication name to ipns address and keep publication names unique

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthenticationGuard } from './@core/identity/authentication.guard';
 import { HomeComponent } from './home/home.component';
 import { extract } from './i18n';
 import { ArticleListComponent } from './publisher/article-list/article-list.component';
@@ -8,7 +9,6 @@ import { NewArticleComponent } from './publisher/new-article/new-article.compone
 import { NewPublicationComponent } from './publisher/new-publication/new-publication.component';
 import { PublicationListComponent } from './publisher/publication-list/publication-list.component';
 import { SignInComponent } from './user/sign-in/sign-in.component';
-import { UserHomeComponent } from './user/user-home/user-home.component';
 
 //TODO:ROADMAP: This is not a scalable pattern for routing, but it is sufficient for early days and easier to keep track of with few routes. It requires us to export components from their respective modules and reference them here. At some point we should switch this over to use seperate routing modules.
 
@@ -20,9 +20,18 @@ const routes: Routes = [
   { path: 'pnlp', component: PublicationListComponent, data: { title: extract('Publication') } },
   { path: 'pnlp/:publication_id', component: ArticleListComponent, data: { title: extract('pnlp') } },
   { path: 'pnlp/:publication_id/:article_id', component: ArticleViewComponent, data: { title: extract('pnlp') } },
-  { path: 'user-home', component: UserHomeComponent, data: { title: extract('User Home') } },
-  { path: 'write', component: NewArticleComponent, data: { title: extract('Write') } },
-  { path: 'new', component: NewPublicationComponent, data: { title: extract('Write') } },
+  {
+    path: 'write',
+    canActivate: [AuthenticationGuard],
+    component: NewArticleComponent,
+    data: { title: extract('Write') },
+  },
+  {
+    path: 'new',
+    canActivate: [AuthenticationGuard],
+    component: NewPublicationComponent,
+    data: { title: extract('Write') },
+  },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 

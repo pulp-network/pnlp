@@ -14,6 +14,12 @@ pnlp (pronounced "pulp") is an open publishing platform for written content.
 ## To run the smart contracts against a local testnet
 
 - Run `ganache-cli` in a new terminal.
+- Run `truffle build` and `truffle migrate`.
+- Copy the contract address into `blockchain.service.ts`
+
+## To run on the public testnet
+
+- Keep code as is. The address of the public contract is `0x88D632D0266CE47608FAE77ff4D37344FE562f12`.
 
 ## To run the frontend
 

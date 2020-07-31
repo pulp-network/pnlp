@@ -42,7 +42,7 @@ type WindowInstanceWithEthereum = Window & typeof globalThis & { ethereum?: prov
 export class BlockchainService {
   private contractAbi = ContractJson.abi;
   private contractAddress: EthereumAddress = new EthereumAddress(
-    BigNumber.from('0x6038b800C8836A70691e23bdF775F0813Cb714f8')
+    BigNumber.from('0x88D632D0266CE47608FAE77ff4D37344FE562f12')
   );
 
   private provider: providers.Web3Provider;

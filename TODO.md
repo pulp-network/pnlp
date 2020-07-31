@@ -1,27 +1,18 @@
 # TODO
 
-**TODO:ERROR_1**
+**TODO:RETURN_TYPES: IPNS/IPFS**
 
-- contract.functions.publications()
+- we should use the strong types across the codebase for ipns and ipfs
 
-**TODO:ERROR_2**
-
-- contract.functions.publishArticle()
+## **TODO:AWAIT_TRANSACTION**
 
 **TODO:ETH_CONTRACTS**
 
 - we'll need to deploy eth contracts to some testnet and then the mainnet
+- ropsten today
+- mainnet weekend
 
-**TODO:CONTRACT_JSON**
-
-we need to deploy the contract.json along with the rest of the angular app (fleek is doing this every time we commit to master in our github account); options:
-
-1. we configure fleek to run truffle build as part of the fleek deployment
-1. we build the contract.json once on local and commit it to source code
-
-either way, the output will have to be somewhere inside the angular app for the angular build to pick it up and put it in pnlp-app/dist which is the directory fleek is deploying. maybe we output the contract.json next to the blockchain.service ?
-
-**TODO:SIGN_IN**
+**TODO:SIGN_IN**dp-kb
 
 - hide "create publication" page and "create article" page until user has identified themselves with metamask
 - allow components to easily grab current eth address from identity service
@@ -32,6 +23,8 @@ either way, the output will have to be somewhere inside the angular app for the 
 - TODO:SVGS: consolidate svgs
 - TODO:PRISM: fix code highlighting in markdown: see "Prism not found" error in browser on pageload
 - TODO:HELP_LINKS: add help links to markdown spec, emoji spec, etc https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md
+- rename article-list page to publication-home page
+- TODO:ADD_IPFS: add article ipfs address on article creation in .pulp.json
 
 ## Burner
 

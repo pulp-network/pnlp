@@ -51,7 +51,7 @@ pnlp (pronounced "pulp") is an open publishing platform for written content.
 - author can list their own publications; [issue](https://github.com/pnlp-network/pnlp/issues/21)
 - author can navigate to each publication and list articles under that publication; [issue](https://github.com/pnlp-network/pnlp/issues/22)
 - author can read their own article; [issue](https://github.com/pnlp-network/pnlp/issues/23)
-- author can link a pnlp subdomain to an IPNS directory and persist this info in a decentralized way. How? TBD..... but the pnlp article address should be a multi-address: `pnlp/<pnlp-version>/<publication-name>/<article-name>` [issue](https://github.com/pnlp-network/pnlp/issues/24)
+- author can link a pnlp slug to an IPNS directory and persist this info in a decentralized way. How? TBD..... but the pnlp article address should be a multi-address: `pnlp/<pnlp-version>/<publication-name>/<article-name>` [issue](https://github.com/pnlp-network/pnlp/issues/24)
 
 ##### `v0.0.2` Acceptance Criteria
 

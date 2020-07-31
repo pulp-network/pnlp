@@ -1,7 +1,7 @@
 <header>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
-      <a href="/home"><img src="assets/pnlp.png" alt="pulp logo" height="30px" /></a>
+      <a [routerLink]="['/home']"><img src="assets/pnlp.png" alt="pulp logo" height="30px" /></a>
       <button
         class="navbar-toggler"
         type="button"
@@ -16,24 +16,29 @@
         <div class="navbar-nav ml-auto">
           <app-language-selector inNavbar="true" menuClass="dropdown-menu dropdown-menu-right"></app-language-selector>
 
-          <div class="nav-item" *ngIf="isAuthenticated">
-            <div class="nav-item" ngbDropdown>
-              <a id="user-dropdown" class="nav-link" ngbDropdownToggle>
-                <i class="fas fa-user-circle"></i> <b>{{ userAddress | async }}</b>
-              </a>
-              <div ngbDropdownMenu aria-labelledby="user-dropdown" class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" href="/user-home" translate>Account</button>
-                <div class="dropdown-divider"></div>
-                <button class="dropdown-item" (click)="logout()" translate>Logout</button>
-              </div>
+          <div *ngIf="ethAddress$ | async" class="nav-item mr-1" ngbDropdown>
+            <a id="account-dropdown" class="nav-link" ngbDropdownToggle>
+              {{ (ethAddress$ | async)?.slice(0, 10) + '...' }}
+            </a>
+            <div ngbDropdownMenu aria-labelledby="account-dropdown" class="dropdown-menu">
+              <button
+                class="dropdown-item"
+                *ngFor="let publication of myPublications$ | async"
+                [routerLink]="['/pnlp', (publication | async)?.slug]"
+              >
+                {{ publication }}
+              </button>
+              <button class="dropdown-item" (click)="signout()">
+                Sign Out
+              </button>
             </div>
           </div>
 
-          <div class="nav-item mr-1" *ngIf="!isAuthenticated">
-            <a class="btn btn-light btn-md" href="/sign-in" role="button">Sign In</a>
+          <div class="nav-item mr-1" *ngIf="!(ethAddress$ | async)">
+            <button type="button" class="btn btn-light" (click)="signin()">Sign In</button>
           </div>
 
-          <div class="nav-item" *ngIf="!isAuthenticated">
+          <div class="nav-item" *ngIf="!(ethAddress$ | async)">
             <a class="btn btn-primary btn-md" href="/" role="button">Get Started</a>
           </div>
         </div>

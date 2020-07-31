@@ -5,12 +5,15 @@ export interface Publication {
   name: string;
   description: string;
   articles: {
-    [article_slug: string]: {
-      tx: string;
-      title: string;
-      timestamp: Date;
-    };
+    [article_slug: string]: ArticleSummary;
   };
+}
+
+export interface ArticleSummary {
+  tx: string;
+  ipfs_address: string;
+  title: string;
+  timestamp: Date;
 }
 
 export const ValidPublicationSlug = /^[a-z0-9]+$/;

@@ -49,7 +49,7 @@ export class NewPublicationComponent implements OnInit {
     });
   }
 
-  public async submit() {
+  public submit() {
     this.submissionError = null;
     this.networkRequest = true;
     const slug = this.publicationForm.controls.slugControl.value;
@@ -62,8 +62,14 @@ export class NewPublicationComponent implements OnInit {
         description: this.publicationForm.controls.descriptionControl.value,
         articles: {},
       })
-      .then((_) => {
-        this.router.navigate(['pnlp', slug]);
+      .then(({ transaction, publication, ipns_address }) => {
+        this.router.navigate([`pnlp`, slug], {
+          queryParams: {
+            ipns: ipns_address,
+            transaction,
+            publication_name: publication.name,
+          },
+        });
       })
       .catch((err) => (this.submissionError = err.message || err))
       .finally(() => (this.networkRequest = false));

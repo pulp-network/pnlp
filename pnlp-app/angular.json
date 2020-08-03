@@ -42,6 +42,7 @@
               "node_modules/ngx-markdown-editor/assets/marked.min.js",
               "node_modules/emoji-toolkit/lib/js/joypixels.min.js",
               "node_modules/katex/dist/katex.min.js",
+              "node_modules/prismjs/prism.js",
               "node_modules/prismjs/components/prism-css.min.js",
               "node_modules/prismjs/components/prism-sql.min.js",
               "node_modules/prismjs/components/prism-bash.min.js",

@@ -41,6 +41,7 @@ type WindowInstanceWithEthereum = Window & typeof globalThis & { ethereum?: prov
 })
 export class BlockchainService {
   private contractAbi = ContractJson.abi;
+  // TODO:ROPSTEN-MAINNET: change to mainnet address
   private contractAddress: EthereumAddress = new EthereumAddress('0x88D632D0266CE47608FAE77ff4D37344FE562f12');
 
   private provider: providers.Web3Provider;
@@ -100,6 +101,8 @@ export class BlockchainService {
       console.debug(`publication did not exist...`);
       return null;
     }
+
+    // TODO:PUBLICATION_AUTHOR:
     console.debug(
       `found publication at ${publication.ipnsHash} published by ${publication.author} on ${publication.timestamp}`
     );
@@ -136,22 +139,13 @@ export class BlockchainService {
     if (!this.initialized) {
       this.init();
     }
+    if (!publication_slug || !ipfs_hash.value) {
+      throw new Error(`publication_slug (${publication_slug}) and ipfs_hash (${ipfs_hash.value}) are required fields`);
+    }
 
     try {
       console.debug(`creating article on ethereum: ${publication_slug}:${ipfs_hash.value}`);
 
-      //TODO:ERROR_2:
-      //   blockchain.service.ts:145 TypeError: Cannot read property 'length' of undefined
-      // at Object.toUtf8Bytes (ethers.umd.js:7587)
-      // at StringCoder.encode (ethers.umd.js:7973)
-      // at ethers.umd.js:6966
-      // at Array.forEach (<anonymous>)
-      // at Object.pack (ethers.umd.js:6960)
-      // at TupleCoder.encode (ethers.umd.js:8022)
-      // at AbiCoder.encode (ethers.umd.js:8121)
-      // at Interface._encodeParams (ethers.umd.js:8452)
-      // at Interface.encodeFunctionData (ethers.umd.js:8475)
-      // at ethers.umd.js:9438
       const transaction = await this.contract.functions.publishArticle(publication_slug, ipfs_hash.value);
       console.debug('transaction result: ', transaction);
       return transaction;

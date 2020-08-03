@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { from, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { BlockchainService } from '../../@core/persistence/blockchain.service';
+import { BlockchainService, PublicationRecord } from '../../@core/persistence/blockchain.service';
+import { PreferencesService } from '../../@core/preferences/preferences.service';
 import { PublicationService } from '../../@core/publication/publication.service';
 import { Publication } from '../../model/Publication';
 
@@ -18,6 +19,9 @@ export class ArticleListComponent implements OnInit {
   error: string;
   transaction$: Observable<string>;
   publication$: Observable<Publication>;
+  metadata$: Observable<PublicationRecord>;
+  ipnsUrl$: Observable<string>;
+  response$: Observable<{ publication: Publication; metadata: PublicationRecord }>;
   articles$: Observable<
     {
       slug: string;
@@ -31,14 +35,19 @@ export class ArticleListComponent implements OnInit {
   constructor(
     private publicationService: PublicationService,
     private route: ActivatedRoute,
-    private blockchainService: BlockchainService
+    private blockchainService: BlockchainService,
+    private preferencesService: PreferencesService
   ) {}
+
+  get nerdMode$(): Observable<boolean> {
+    return this.preferencesService.observablePreferences.pipe(map((p) => p.nerd_mode));
+  }
 
   ngOnInit(): void {
     this.routeSubscription = this.route.params.subscribe((params) => {
       this.publicationSlug = params['publication_id'];
       this.isLoading = true;
-      this.publication$ = from(
+      this.response$ = from(
         this.publicationService
           .listArticles(this.publicationSlug)
           .catch((err) => {
@@ -55,9 +64,11 @@ export class ArticleListComponent implements OnInit {
         // TODO:AWAIT_TRANSACTION; not exactly sure if it should look like this or not.
         // this.transaction$ = from(this.blockchainService.awaitTransaction(optional_transaction));
       }
-      this.articles$ = this.publication$.pipe(
+      this.publication$ = this.response$.pipe(map((r) => r.publication));
+      this.metadata$ = this.response$.pipe(map((r) => r.metadata));
+      this.articles$ = this.response$.pipe(
         map((p) => {
-          return Object.entries(p.articles).map(([slug, article]) => {
+          return Object.entries(p.publication.articles).map(([slug, article]) => {
             return {
               slug: slug,
               ipfs_address: article.ipfs_address,
@@ -67,6 +78,9 @@ export class ArticleListComponent implements OnInit {
             };
           });
         })
+      );
+      this.ipnsUrl$ = this.response$.pipe(
+        map((r) => `https://${r.metadata.ipns_hash.value}.ipns.hub.textile.io/${r.publication.slug}`)
       );
     });
   }

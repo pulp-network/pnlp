@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { from, Observable, Subscription } from 'rxjs';
+import { IdentityService } from '../../@core/identity/identity.service';
 import { PublicationService } from '../../@core/publication/publication.service';
 import { Article, ValidArticleSlug } from '../../model/Article';
 import { Publication } from '../../model/Publication';
@@ -47,7 +48,12 @@ export class NewArticleComponent implements OnInit {
     return !this.articleForm.controls.slugControl.valid && this.articleForm.controls.slugControl.dirty;
   }
 
-  constructor(private publicationService: PublicationService, private route: ActivatedRoute, private router: Router) {}
+  constructor(
+    private publicationService: PublicationService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private identityService: IdentityService
+  ) {}
 
   ngOnInit(): void {
     this.initializeFormGroup();
@@ -115,7 +121,7 @@ export class NewArticleComponent implements OnInit {
     return {
       slug: this.articleForm.controls.slugControl.value,
       timestamp: new Date(),
-      author: 'TODO: get author identity',
+      author: this.identityService.identity.value.ethereum_identity.value,
       content: {
         title: this.articleForm.controls.titleControl.value,
         subtitle: this.articleForm.controls.subtitleControl.value,

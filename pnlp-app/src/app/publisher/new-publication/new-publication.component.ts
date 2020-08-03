@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { IdentityService } from '../../@core/identity/identity.service';
 import { PublicationService } from '../../@core/publication/publication.service';
 import { ValidPublicationSlug } from '../../model/Publication';
 
@@ -31,7 +32,11 @@ export class NewPublicationComponent implements OnInit {
     return !this.publicationForm.controls.slugControl.valid && this.publicationForm.controls.slugControl.dirty;
   }
 
-  constructor(private publicationService: PublicationService, private router: Router) {}
+  constructor(
+    private publicationService: PublicationService,
+    private router: Router,
+    private identityService: IdentityService
+  ) {}
 
   ngOnInit(): void {
     this.initializeFormGroup();
@@ -56,7 +61,7 @@ export class NewPublicationComponent implements OnInit {
     this.publicationService
       .createPublication({
         slug,
-        editor: 'TODO:get my ethereum address',
+        editor: this.identityService.identity.value.ethereum_identity.value,
         founded: new Date(),
         name: this.publicationForm.controls.nameControl.value,
         description: this.publicationForm.controls.descriptionControl.value,

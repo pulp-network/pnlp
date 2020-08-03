@@ -131,7 +131,7 @@
           Continue Editing
         </button>
 
-        <button type="button" class="align-self-center btn btn-primary" (click)="submit()">
+        <button type="button" class="align-self-center btn btn-primary" (click)="submit()" [disabled]="isCreating">
           {{ isCreating ? 'Publishing...' : 'Publish' }}
         </button>
       </div>

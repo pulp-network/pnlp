@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { LinksReply, ListPathReply } from '@textile/buckets-grpc/buckets_pb';
 import { Buckets, KeyInfo } from '@textile/hub';
 import { IdentityService } from '../identity/identity.service';
+import { IPNSHash } from './blockchain.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,21 +22,25 @@ export class PersistenceService {
 
   constructor(private identityService: IdentityService) {}
 
-  //TODO:RETURN_TYPES: IPNS/IPFS
-  public async writeData(path: string, content: any): Promise<LinksReply.AsObject> {
+  public static mapLinksToIpns(links: LinksReply.AsObject): IPNSHash {
+    const ipns_string = links.ipns.replace('https://hub.textile.io/ipns/', '');
+    return new IPNSHash(ipns_string);
+  }
+
+  public async writeData(path: string, content: any): Promise<IPNSHash> {
     await this.initializeBucketIfNecessary();
 
     const buf = Buffer.from(JSON.stringify(content, null, 2));
     console.debug(`Writing ${buf.length} bytes to ${path}`);
     await this.bucketMap.get(this.selectedBucketKey).pushPath(this.selectedBucketKey, path, buf);
-    return this.bucketMap.get(this.selectedBucketKey).links(this.selectedBucketKey);
+    const links_reply = await this.bucketMap.get(this.selectedBucketKey).links(this.selectedBucketKey);
+    return PersistenceService.mapLinksToIpns(links_reply);
   }
 
   public async lsIpns(path: string): Promise<ListPathReply.AsObject> {
     await this.initializeBucketIfNecessary();
     console.debug(`listPath: ${path}`);
-    const res = await this.bucketMap.get(this.selectedBucketKey).listPath(this.selectedBucketKey, path);
-    return res;
+    return this.bucketMap.get(this.selectedBucketKey).listPath(this.selectedBucketKey, path);
   }
 
   public async catPathJson<T>(path: string, progress?: (num?: number) => void): Promise<T> {

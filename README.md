@@ -13,8 +13,8 @@ pnlp (pronounced "pulp") is an open publishing platform for written content.
 
 ## To run the smart contracts against a local testnet
 
+- Run `cd pnlp-contract && truffle build && truffle migrate`.
 - Run `ganache-cli` in a new terminal.
-- Run `truffle build` and `truffle migrate`.
 - Copy the contract address into `blockchain.service.ts`
 
 ## To run on the public testnet
@@ -24,7 +24,6 @@ pnlp (pronounced "pulp") is an open publishing platform for written content.
 ## To run the frontend
 
 - Open another terminal
-- `cd pnlp-contract && truffle build && truffle migrate`
 - `cd ../pnlp-app && npm start`
 - [http://localhost:4200](http://localhost:4200)
 - during HackFS, use [FEEDBACK.md](https://github.com/pnlp-network/pnlp/blob/master/FEEDBACK.md) to list all (even minor) interactive trouble with positive and critical feedback for other teams we're interacting with. This is helpful to the community at large.

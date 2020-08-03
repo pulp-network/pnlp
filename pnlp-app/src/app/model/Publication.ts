@@ -16,7 +16,7 @@ export interface ArticleSummary {
   timestamp: Date;
 }
 
-export const ValidPublicationSlug = /^[a-z0-9]+$/;
+export const ValidPublicationSlug = /^[a-z0-9-]+$/;
 
 export const PublicationValidator = (publication: Publication): string => {
   let err = '';

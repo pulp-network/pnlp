@@ -4,6 +4,7 @@ import { UserService } from '@app/user';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IdentityService, PnlpIdentity } from '../../@core/identity/identity.service';
+import { PreferencesService } from '../../@core/preferences/preferences.service';
 import { PublicationService } from '../../@core/publication/publication.service';
 
 @Component({
@@ -21,8 +22,13 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private identityService: IdentityService,
-    private publicationService: PublicationService
+    private publicationService: PublicationService,
+    private preferencesService: PreferencesService
   ) {}
+
+  get nerdMode$(): Observable<boolean> {
+    return this.preferencesService.observablePreferences.pipe(map((p) => p.nerd_mode));
+  }
 
   ngOnInit() {
     // this.identityService.loadEthereumAddress();
@@ -44,6 +50,10 @@ export class HeaderComponent implements OnInit {
 
   signout() {
     this.identityService.signout();
+  }
+
+  setNerdMode(mode: boolean) {
+    this.preferencesService.setPreference({ nerd_mode: mode });
   }
 
   get userAddress(): Observable<string> | null {

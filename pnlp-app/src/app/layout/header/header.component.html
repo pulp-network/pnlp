@@ -28,7 +28,13 @@
               >
                 {{ publication }}
               </button>
-              <button class="dropdown-item" (click)="signout()">
+              <button *ngIf="nerdMode$ | async" class="dropdown-item" (click)="setNerdMode(false)">
+                Hide Blockchain Info
+              </button>
+              <button *ngIf="!(nerdMode$ | async)" class="dropdown-item" (click)="setNerdMode(true)">
+                Show Blockchain Info
+              </button>
+              <button class="dropdown-item">
                 Sign Out
               </button>
             </div>

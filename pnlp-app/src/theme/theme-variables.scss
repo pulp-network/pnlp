@@ -38,11 +38,14 @@ $green: #28a745;
 $teal: #20c997;
 $cyan: #17a2b8;
 
+$pnlp-network-primary: #232855;
+$pnlp-network-accent: #aaffc7;
+
 $theme-colors: (
-  primary: $blue,
-  secondary: $gray-600,
+  primary: $pnlp-network-primary,
+  secondary: $pnlp-network-accent,
   success: $green,
-  info: $cyan,
+  info: $pnlp-network-primary,
   warning: $yellow,
   danger: $red,
   light: $gray-100,

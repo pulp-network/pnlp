@@ -12,6 +12,7 @@ export interface Publication {
 export interface ArticleSummary {
   tx: string;
   ipfs_address: string;
+  author: string;
   title: string;
   timestamp: Date;
 }

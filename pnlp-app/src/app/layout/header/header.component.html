@@ -1,7 +1,7 @@
 <header>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar navbar-expand-lg navbar-primary bg-primary">
     <div class="container">
-      <a [routerLink]="['/home']"><img src="assets/pnlp.png" alt="pulp logo" height="30px" /></a>
+      <a [routerLink]="['/home']"><img src="assets/pnlp-network-logo.png" alt="pulp logo" height="30px" /></a>
       <button
         class="navbar-toggler"
         type="button"
@@ -14,38 +14,46 @@
       </button>
       <div id="navbar-menu" class="collapse navbar-collapse float-xs-none" [ngbCollapse]="menuHidden">
         <div class="navbar-nav ml-auto">
-          <app-language-selector inNavbar="true" menuClass="dropdown-menu dropdown-menu-right"></app-language-selector>
+          <app-language-selector inNavbar="true" menuClass="dropdown-menu dropdown-menu-righ"> </app-language-selector>
 
           <div *ngIf="ethAddress$ | async" class="nav-item mr-1" ngbDropdown>
-            <a id="account-dropdown" class="nav-link" ngbDropdownToggle>
+            <a id="account-dropdown" class="nav-link btn btn-secondary" ngbDropdownToggle>
               {{ (ethAddress$ | async)?.slice(0, 10) + '...' }}
             </a>
-            <div ngbDropdownMenu aria-labelledby="account-dropdown" class="dropdown-menu">
+            <div ngbDropdownMenu aria-labelledby="account-dropdown" class="dropdown-menu bg bg-secondary text-primary">
               <button
-                class="dropdown-item"
+                class="dropdown-item btn btn-secondary text-primary"
                 *ngFor="let publication of myPublications$ | async"
                 [routerLink]="['/pnlp', (publication | async)?.slug]"
               >
                 {{ publication }}
               </button>
-              <button *ngIf="nerdMode$ | async" class="dropdown-item" (click)="setNerdMode(false)">
+              <button
+                *ngIf="nerdMode$ | async"
+                class="dropdown-item btn btn-secondary text-primary"
+                (click)="setNerdMode(false)"
+              >
                 Hide Blockchain Info
               </button>
-              <button *ngIf="!(nerdMode$ | async)" class="dropdown-item" (click)="setNerdMode(true)">
+              <button
+                *ngIf="!(nerdMode$ | async)"
+                class="dropdown-item btn btn-secondary text-primary"
+                (click)="setNerdMode(true)"
+              >
                 Show Blockchain Info
               </button>
-              <button class="dropdown-item">
+              <button class="dropdown-item btn btn-secondary text-primary">
                 Sign Out
               </button>
             </div>
           </div>
 
           <div class="nav-item mr-1" *ngIf="!(ethAddress$ | async)">
-            <button type="button" class="btn btn-light" (click)="signin()">Sign In</button>
+            <button type="button" class="btn btn-primary" (click)="signin()">Sign In</button>
           </div>
 
           <div class="nav-item" *ngIf="!(ethAddress$ | async)">
-            <a class="btn btn-primary btn-md" href="/" role="button">Get Started</a>
+            <a class="btn btn-secondary btn-md" href="/" role="button">Get Started</a>
           </div>
         </div>
       </div>

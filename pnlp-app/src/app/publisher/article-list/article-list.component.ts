@@ -26,6 +26,7 @@ export class ArticleListComponent implements OnInit {
     {
       slug: string;
       ipfs_address: string;
+      author: string;
       tx: string;
       title: string;
       timestamp: Date;
@@ -75,6 +76,7 @@ export class ArticleListComponent implements OnInit {
               tx: article.tx,
               title: article.title,
               timestamp: article.timestamp,
+              author: article.author,
             };
           });
         })

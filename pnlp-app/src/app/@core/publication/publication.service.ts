@@ -159,6 +159,7 @@ export class PublicationService {
       tx: transactionHash,
       title: article.content.title,
       ipfs_address: ipfs_hash.value,
+      author: article.author,
       timestamp: article.timestamp,
     };
 

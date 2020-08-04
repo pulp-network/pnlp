@@ -15,18 +15,18 @@
       </div>
       <div *ngIf="(nerdMode$ | async) && summary?.tx" class="small text-muted">
         <!-- TODO:ROPSTEN-MAINNET: remove ropsten subdomain -->
-        <a [href]="'https://ropsten.etherscan.io/tx/' + summary.tx" class="text-info" target="_blank"
-          >proof-of-existence: {{ summary.tx }}</a
+        <a [href]="'https://ropsten.etherscan.io/tx/' + summary?.tx" class="text-info" target="_blank"
+          >proof-of-existence: {{ summary?.tx }}</a
         >
       </div>
       <div *ngIf="(nerdMode$ | async) && summary?.ipfs_address" class="small text-muted">
-        <a [href]="'https://explore.ipld.io/#/explore/' + summary.ipfs_address" class="text-info" target="_blank"
-          >location: ipfs/{{ summary.ipfs_address }}</a
+        <a [href]="'https://explore.ipld.io/#/explore/' + summary?.ipfs_address" class="text-info" target="_blank"
+          >location: ipfs/{{ summary?.ipfs_address }}</a
         >
       </div>
     </div>
     <div>
-      <img src="assets/pnlp-logo-grey@190.png" alt="pulp logo" height="80px" />
+      <img src="assets/pnlp-network-logo-grey.png" alt="pulp logo" height="80px" />
     </div>
   </div>
 

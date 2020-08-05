@@ -67,28 +67,37 @@
 ### 2020-07-16
 
 - begin draft of pulp whitepaper
+- [continue exploring identity options](https://filecoinproject.slack.com/archives/C016LN9CZDH/p1594898788197400)
+- need to get metamask to generate libp2pidentity for textile to use to create ipns record
+- settled on using 3box for this task
 
 ### 2020-07-17
+
+- add 3Box package to app to use for identity
+- lots of errors; traced to problems in build configuration
 
 ### 2020-07-18
 
 - add smart contracts to pnlp-contract
 - add ganache and truffle framework for development
 - add ethers.js to package.json
+- opened
 
 ### 2020-07-19
 
--
+- add [3box-angular-example](https://github.com/pnlp-network/3box-angular-example) repository to publish baseline Angular+3Box example
 
 ### 2020-07-20
 
-### 2020-07-21
+- fix angular 3box loading problem, webpack configuration changes here: [3box-angular-example](https://github.com/pnlp-network/3box-angular-example)
 
--
+### 2020-07-21
 
 ### 2020-07-22
 
 ### 2020-07-23
+
+- ran into 3box [call issue](https://filecoinproject.slack.com/archives/C016WNAD649/p1595509083332200)
 
 ### 2020-07-24
 

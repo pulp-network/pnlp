@@ -224,3 +224,20 @@ subscribe(publication_slug) => void
 Attach the required fee.
 
 The resulting transaction serves as proof of payment. TODO:Key transfer. Upon the release of each "subscriber-only" article, the author must distribute a new key. This is an open question. Ideas?
+
+Triangle Key Exchange
+
+- The Author encrypts data with keyA.
+- The Aggregator/Reader receives keyA from Author through key exchange.
+- The Subscriber receives keyB from Author through key exchange.
+- The Aggregator decrypts the data using keyA with a prompt from keyB?
+
+Author
+|
+keyA(keyB(data))
+|
+Aggregator
+|
+?
+|
+Subscriber

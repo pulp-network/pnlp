@@ -57,3 +57,65 @@
 - added bootstrap styling to new-article
 - added bootstrap styling to article-read
 - added ngx-markdown
+
+### 2020-07-15
+
+- add TODO comments and organize tasks
+- stop initializing Textile bucket on every call
+- add error and loader components to UI
+
+### 2020-07-16
+
+- begin draft of pulp whitepaper
+
+### 2020-07-17
+
+### 2020-07-18
+
+- add smart contracts to pnlp-contract
+- add ganache and truffle framework for development
+- add ethers.js to package.json
+
+### 2020-07-19
+
+-
+
+### 2020-07-20
+
+### 2020-07-21
+
+-
+
+### 2020-07-22
+
+### 2020-07-23
+
+### 2020-07-24
+
+### 2020-07-25
+
+### 2020-07-26
+
+- modify smart contracts
+- add blockchain service
+- add key-generation to generate LibP2PIdentity from Metamask private key
+
+### 2020-07-27
+
+### 2020-07-28
+
+### 2020-07-29
+
+-
+
+### 2020-07-30
+
+### 2020-07-31
+
+### 2020-08-01
+
+### 2020-08-02
+
+### 2020-08-03
+
+### 2020-08-04

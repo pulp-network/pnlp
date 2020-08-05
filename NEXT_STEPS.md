@@ -1,3 +1,5 @@
-- refactor pulp protocol interaction code into typescript library
-- add a second client using the ts library. react?
-- add a second implementation
+- refactor pulp protocol interaction code into typescript reference library
+- add a second implementation: python? go?
+- add multi-language support
+- use web-accessibility audit tool to make sure pnlp.network is fully accessible under https://webaim.org/ standards
+- open gated beta access publishing program

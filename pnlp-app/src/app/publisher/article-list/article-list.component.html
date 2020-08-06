@@ -1,0 +1,82 @@
+<app-loader *ngIf="isLoading"></app-loader>
+<app-error [error]="error"></app-error>
+<div class="mt-4 d-flex justify-content-center" *ngIf="!isLoading && !error">
+  <div *ngIf="response$ | async" class="flex-grow-1">
+    <div class="d-flex justify-content-between">
+      <div class="mb-3">
+        <div class="lead">
+          {{ (publication$ | async)?.name }}
+        </div>
+        <div class="small text-muted">
+          {{ (publication$ | async)?.description }}
+        </div>
+        <div *ngIf="nerdMode$ | async" class="small text-muted">
+          <a [href]="ipnsUrl$ | async" class="text-info" target="_blank"
+            >ipns/{{ (metadata$ | async)?.ipns_hash?.value }}/{{ (publication$ | async)?.slug }}</a
+          >
+        </div>
+      </div>
+      <div>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [routerLink]="'/write'"
+          [queryParams]="{ publication: publicationSlug }"
+        >
+          Start Writing
+          <!-- TODO:SVGS: consolidate these -->
+          <svg
+            width="1.5em"
+            height="1.5em"
+            viewBox="0 0 16 16"
+            class="bi bi-arrow-right"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10.146 4.646a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L12.793 8l-2.647-2.646a.5.5 0 0 1 0-.708z"
+            />
+            <path fill-rule="evenodd" d="M2 8a.5.5 0 0 1 .5-.5H13a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 8z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="list-group" *ngIf="!error">
+      <a *ngFor="let article of articles$ | async" class="list-group-item">
+        <div class="flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between">
+            <span [routerLink]="[article.slug]" style="cursor: pointer;">
+              {{ article?.title }}
+            </span>
+            <span class="small text-muted">
+              {{ article?.timestamp | date: 'short' }}
+            </span>
+          </div>
+          <div *ngIf="article?.author" class="small text-info">
+            <a [href]="'https://ropsten.etherscan.io/address/' + article?.author" class="text-info" target="_blank"
+              >By: {{ article?.author }}</a
+            >
+          </div>
+          <div *ngIf="(nerdMode$ | async) && article?.ipfs_address" class="small text-muted">
+            <a [href]="'https://explore.ipld.io/#/explore/' + article?.ipfs_address" class="text-info" target="_blank"
+              >location: ipfs/{{ article?.ipfs_address }}</a
+            >
+          </div>
+          <div *ngIf="(nerdMode$ | async) && article?.tx" class="small text-muted">
+            <!-- TODO:ROPSTEN-MAINNET: remove ropsten subdomain -->
+            <a [href]="'https://ropsten.etherscan.io/tx/' + article?.tx" class="text-info" target="_blank"
+              >proof-of-existence: {{ article?.tx }}</a
+            >
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div *ngIf="!(articles$ | async)?.length" class="text-center">
+      <img src="assets/pnlp-logo-grey@190.png" alt="pulp logo" height="190px" />
+      <div class="lead text-muted">There are no articles here yet</div>
+    </div>
+  </div>
+</div>

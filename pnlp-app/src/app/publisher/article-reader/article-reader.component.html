@@ -1,0 +1,44 @@
+<div *ngIf="article">
+  <div class="d-flex justify-content-between">
+    <div>
+      <div class="lead article-title">
+        {{ article.content?.title }}
+      </div>
+      <div class="lead article-subtitle">
+        {{ article.content.subtitle }}
+      </div>
+      <div *ngIf="(nerdMode$ | async) && article?.author" class="small text-muted">
+        <!-- TODO:ROPSTEN-MAINNET: remove ropsten subdomain-->
+        <a [href]="'https://ropsten.etherscan.io/address/' + article?.author" class="text-info" target="_blank"
+          >author: {{ article?.author }}</a
+        >
+      </div>
+      <div *ngIf="(nerdMode$ | async) && summary?.tx" class="small text-muted">
+        <!-- TODO:ROPSTEN-MAINNET: remove ropsten subdomain -->
+        <a [href]="'https://ropsten.etherscan.io/tx/' + summary?.tx" class="text-info" target="_blank"
+          >proof-of-existence: {{ summary?.tx }}</a
+        >
+      </div>
+      <div *ngIf="(nerdMode$ | async) && summary?.ipfs_address" class="small text-muted">
+        <a [href]="'https://explore.ipld.io/#/explore/' + summary?.ipfs_address" class="text-info" target="_blank"
+          >location: ipfs/{{ summary?.ipfs_address }}</a
+        >
+      </div>
+    </div>
+    <div>
+      <img src="assets/pnlp-network-logo-grey.png" alt="pulp logo" height="80px" />
+    </div>
+  </div>
+
+  <hr class="my-4" />
+
+  <markdown preserveWhitespaces emoji katex [data]="article.content.body"></markdown>
+
+  <hr class="my-4" />
+
+  <div class="text-center mb-5">
+    <small
+      >This article {{ preview ? 'to be' : 'was' }} published on the distributed web using the pulp protocol.</small
+    >
+  </div>
+</div>

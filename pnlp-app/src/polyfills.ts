@@ -55,13 +55,57 @@
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js/dist/zone'; // Included with Angular CLI.
-
 /***************************************************************************************************
  * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
  */
 import '@angular/localize/init';
+import 'brace'; // used by ngx-markdown-editor
+import 'brace/mode/markdown'; // used by ngx-markdown-editor
+import 'zone.js/dist/zone'; // Included with Angular CLI.
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+// TODO:11:remove this when this issue is fixed and we've upgraded to latest @textile/threads-core: https://github.com/textileio/js-threads/issues/389
+(window as any).global = window;
+(window as any).process = {};
+(window as any).process = window;
+(window as any).process.browser = true;
+(window as any).process.version = '';
+(window as any).process.versions = { node: false };
+(window as any).process.nextTick = (() => {
+  const canSetImmediate = typeof window !== 'undefined' && (window as any).setImmediate;
+  const canPost = typeof window !== 'undefined' && window.postMessage && window.addEventListener;
+  if (canSetImmediate) {
+    return (f: any) => {
+      return (window as any).setImmediate(f);
+    };
+  }
+  if (canPost) {
+    const queue: any = [];
+    window.addEventListener(
+      'message',
+      (ev) => {
+        const source = ev.source;
+        if ((source === window || source === null) && ev.data === 'process-tick') {
+          ev.stopPropagation();
+          if (queue.length > 0) {
+            const fn = queue.shift();
+            fn();
+          }
+        }
+      },
+      true
+    );
+    return function nextTick(fn: any) {
+      queue.push(fn);
+      window.postMessage('process-tick', '*');
+    };
+  }
+  return function nextTick(fn: any) {
+    setTimeout(fn, 0);
+  };
+})();
+(window as any).global.Buffer = (window as any).global.Buffer || require('buffer').Buffer;
+// TODO:END

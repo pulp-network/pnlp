@@ -1,0 +1,90 @@
+<div class="mt-4 d-flex justify-content-center">
+  <div>
+    <div class="lead">
+      Start a Publication
+    </div>
+    <div class="small text-muted mb-3">
+      straight from your pen to the rest of the universe
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <form [formGroup]="publicationForm">
+          <div class="form-group">
+            <label class="text-muted small" for="publication-name">Publication Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="publication-name"
+              id="publication-name"
+              placeholder="E.g. 'The New York Rhymes'"
+              formControlName="nameControl"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="text-muted small" for="publication-description">Tagline</label>
+            <input
+              type="text"
+              class="form-control"
+              name="publication-description"
+              id="publication-description"
+              placeholder="E.g. 'All the verse that's fit to spit'"
+              formControlName="descriptionControl"
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="text-muted small" for="publication-url">URL</label>
+            <div class="input-group">
+              <input
+                type="text"
+                placeholder="E.g 'nyrhymes'"
+                formControlName="slugControl"
+                required
+                class="form-control"
+                id="publication-url"
+                aria-describedby="publication-url-desc"
+                aria-invalid="showSlugError"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text" id="publication-url-desc">.on.pnlp.network</span>
+              </div>
+            </div>
+            <div>
+              <small class="form-text text-muted" *ngIf="showSlugError; else empty">
+                {{ slugError }}
+              </small>
+              <ng-template #empty><small>&emsp;</small></ng-template>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="mt-4">
+              <button
+                type="submit"
+                class="btn btn-primary btn-block btn-lg"
+                (click)="submit()"
+                [disabled]="!publicationForm.valid || networkRequest"
+              >
+                {{ networkRequest ? 'Firing up the Press...' : 'Begin' }}
+              </button>
+            </div>
+          </div>
+          <div class="text-danger small">
+            {{ submissionError }}
+          </div>
+        </form>
+        <div class="small mt-4 text-center" style="width: 400px;">
+          This decentralized app is currently in alpha.
+        </div>
+        <div class="small mt-2 text-center" style="width: 400px;">
+          Use only for experimental purposes at this time.
+        </div>
+        <div class="small mt-2 text-danger text-center" style="width: 400px;">
+          No contract audits have been performed; data will be cycled.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

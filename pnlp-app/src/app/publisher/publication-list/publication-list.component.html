@@ -1,0 +1,19 @@
+<div>
+  <h2>
+    My Publications
+  </h2>
+</div>
+
+<div class="list-group" *ngIf="!error">
+  <a
+    *ngFor="let publication_name of publicationList$ | async"
+    class="list-group-item list-group-item-action"
+    [routerLink]="[publication_name]"
+  >
+    {{ publication_name }}
+  </a>
+</div>
+
+<div *ngIf="error" class="alert alert-danger" role="alert">
+  {{ error }}
+</div>

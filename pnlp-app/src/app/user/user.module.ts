@@ -7,6 +7,7 @@ import { I18nModule } from '../i18n';
 import { SignInComponent } from './sign-in/sign-in.component';
 import { UserHomeComponent } from './user-home/user-home.component';
 
+// TODO: delete user module
 @NgModule({
   declarations: [SignInComponent, UserHomeComponent],
   exports: [SignInComponent, UserHomeComponent],

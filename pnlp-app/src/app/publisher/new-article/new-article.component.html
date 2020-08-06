@@ -1,0 +1,154 @@
+<app-loader *ngIf="isLoading"></app-loader>
+<app-error [error]="loadingError"></app-error>
+
+<div class="mt-4 d-flex justify-content-center" *ngIf="!isLoading && !loadingError">
+  <div class="flex-grow-1">
+    <div *ngIf="!previewMode">
+      <div class="text-muted lead mb-4">
+        <button type="button" class="btn btn-light" [routerLink]="['/pnlp', (publication$ | async)?.slug]">
+          <!-- TODO:SVGS: consolidate these -->
+          <svg
+            width="1.5em"
+            height="1.5em"
+            viewBox="0 0 16 16"
+            class="bi bi-arrow-left-short"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M7.854 4.646a.5.5 0 0 1 0 .708L5.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"
+            />
+            <path fill-rule="evenodd" d="M4.5 8a.5.5 0 0 1 .5-.5h6.5a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5z" />
+          </svg>
+          {{ (publication$ | async)?.name }}
+        </button>
+      </div>
+
+      <form [formGroup]="articleForm">
+        <div class="form-group">
+          <label class="text-muted small sr-only" for="article-title">Title</label>
+          <input
+            type="text"
+            class="form-control form-control-lg"
+            name="article-title"
+            id="article-title"
+            placeholder="Title..."
+            formControlName="titleControl"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="text-muted small sr-only" for="article-subtitle">Subtitle</label>
+          <input
+            type="text"
+            class="form-control form-control-sm"
+            name="article-subtitle"
+            id="article-subtitle"
+            placeholder="Subtitle..."
+            formControlName="subtitleControl"
+          />
+        </div>
+
+        <div class="form-group">
+          <div class="input-group input-group-sm">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="article-slug-desc">
+                https://{{ (publication$ | async)?.slug }}.on.pnlp.network/
+              </span>
+            </div>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="slugControl"
+              required
+              id="article-slug"
+              aria-describedby="article-slug-desc"
+            />
+          </div>
+          <div>
+            <small class="form-text text-muted" *ngIf="showSlugError; else empty">
+              {{ slugError }}
+            </small>
+            <ng-template #empty><small>&emsp;</small></ng-template>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <md-editor
+            name="Body"
+            [(ngModel)]="body"
+            [height]="'400px'"
+            mode="editor"
+            [options]="editorOptions"
+            maxlength="100000"
+            [ngModelOptions]="{ standalone: true }"
+          >
+          </md-editor>
+          <!-- TODO:HELP_LINKS: add help links here to markdown docs -->
+        </div>
+
+        <div class="d-flex justify-content-end mb-5">
+          <button
+            class="btn btn-light btn-lg mr-1"
+            (click)="togglePreviewMode()"
+            [disabled]="!articleForm.valid || isCreating"
+          >
+            Preview
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-primary btn-lg ml-1"
+            (click)="submit()"
+            [disabled]="!articleForm.valid || isCreating"
+          >
+            {{ isCreating ? 'Publishing...' : 'Publish' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="previewMode">
+      <div class="d-flex justify-content-between">
+        <button type="button" class="align-self-center btn btn-secondary" (click)="togglePreviewMode()">
+          <!-- TODO:SVGS: consolidate these -->
+          <svg
+            width="1.5em"
+            height="1.5em"
+            viewBox="0 0 16 16"
+            class="bi bi-arrow-left"
+            fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M5.854 4.646a.5.5 0 0 1 0 .708L3.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0z"
+            />
+            <path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10.5a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
+          </svg>
+          Continue Editing
+        </button>
+
+        <button type="button" class="align-self-center btn btn-primary" (click)="submit()" [disabled]="isCreating">
+          {{ isCreating ? 'Publishing...' : 'Publish' }}
+        </button>
+      </div>
+
+      <div class="row mt-2">
+        <div class="col">
+          <hr />
+        </div>
+        <div class="col-auto small text-muted">
+          https://{{ (publication$ | async)?.slug }}.on.pnlp.network/{{ previewArticle.slug }}
+        </div>
+        <div class="col mb-2">
+          <hr />
+        </div>
+      </div>
+
+      <app-article-reader [article]="previewArticle" [preview]="true"></app-article-reader>
+    </div>
+  </div>
+</div>

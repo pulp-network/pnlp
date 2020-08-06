@@ -42,7 +42,7 @@ type WindowInstanceWithEthereum = Window & typeof globalThis & { ethereum?: prov
 export class BlockchainService {
   private contractAbi = ContractJson.abi;
   // TODO:ROPSTEN-MAINNET: change to mainnet address
-  private contractAddress: EthereumAddress = new EthereumAddress('0x88D632D0266CE47608FAE77ff4D37344FE562f12');
+  private contractAddress: EthereumAddress = new EthereumAddress('0x6a9C839035ebb6FD46026E05a89759fF9a1d1db0');
 
   private provider: providers.Web3Provider;
   private signer: providers.JsonRpcSigner;

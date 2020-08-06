@@ -81,7 +81,7 @@
 - add smart contracts to pnlp-contract
 - add ganache and truffle framework for development
 - add ethers.js to package.json
-- opened
+- opened several issues related to dependencies of 3box, tracked here: https://github.com/pnlp-network/3box-angular-example#tracking-issues-created-in-3box-dependencies
 
 ### 2020-07-19
 
@@ -93,38 +93,69 @@
 
 ### 2020-07-21
 
-### 2020-07-22
+- configure sign in flow
 
 ### 2020-07-23
 
-- ran into 3box [call issue](https://filecoinproject.slack.com/archives/C016WNAD649/p1595509083332200)
+- ran into another 3box [call issue](https://filecoinproject.slack.com/archives/C016WNAD649/p1595509083332200)
 
 ### 2020-07-24
 
-### 2020-07-25
+- continued to try to debug 3box issues, got some help on this thread but ultimately unsuccessful: https://filecoinproject.slack.com/archives/C016WNAD649/p1595509083332200
+
+### 2020-07-26
+
+- work on key-gen to generate LibP2PIdentity from Metamask private key
 
 ### 2020-07-26
 
 - modify smart contracts
 - add blockchain service
-- add key-generation to generate LibP2PIdentity from Metamask private key
+- get key-gen working round trip
 
 ### 2020-07-27
 
+- team meeting to organize for final stretch
+- added TODOs throughout codebase
+
 ### 2020-07-28
+
+- refactor various code in blockchain service, identity service, keystore service
 
 ### 2020-07-29
 
--
+- fix various small bugs
+- add IPNS resolver (scraping textile webapp)
+- commit whitepaper and update draft
 
 ### 2020-07-30
 
+- update README, Whitepaper
+- add awaitTransaction
+
 ### 2020-07-31
 
-### 2020-08-01
+- fix remaining small bugs in new-publication flow
+- add sign-in button
+- remove logout block from header
+- deploy contract to Ropsten network, point dapp to new contract
 
 ### 2020-08-02
 
+- work on 'nerd mode' to expose underlying blockchain data for demo
+- small touch ups, add colors, theme, logo
+
 ### 2020-08-03
 
+- finish 'nerd mode'
+- begin work on slides for video
+
 ### 2020-08-04
+
+- continue slides
+- begin work on video
+
+### 2020-08-05
+
+- record demo
+- clean up and post video

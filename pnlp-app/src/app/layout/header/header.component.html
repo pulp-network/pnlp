@@ -16,9 +16,9 @@
         <div class="navbar-nav ml-auto">
           <app-language-selector inNavbar="true" menuClass="dropdown-menu dropdown-menu-righ"> </app-language-selector>
 
-          <div *ngIf="ethAddress$ | async" class="nav-item mr-1" ngbDropdown>
+          <div *ngIf="ethFriendlyName$ | async" class="nav-item mr-1" ngbDropdown>
             <a id="account-dropdown" class="nav-link btn btn-secondary" ngbDropdownToggle>
-              {{ (ethAddress$ | async)?.slice(0, 10) + '...' }}
+              {{ ethFriendlyName$ | async }}
             </a>
             <div ngbDropdownMenu aria-labelledby="account-dropdown" class="dropdown-menu bg bg-secondary text-primary">
               <button
@@ -42,17 +42,17 @@
               >
                 Show Blockchain Info
               </button>
-              <button class="dropdown-item btn btn-secondary text-primary">
+              <button class="dropdown-item btn btn-secondary text-primary" (click)="signout()">
                 Sign Out
               </button>
             </div>
           </div>
 
-          <div class="nav-item mr-1" *ngIf="!(ethAddress$ | async)">
+          <div class="nav-item mr-1" *ngIf="!(ethFriendlyName$ | async)">
             <button type="button" class="btn btn-primary" (click)="signin()">Sign In</button>
           </div>
 
-          <div class="nav-item" *ngIf="!(ethAddress$ | async)">
+          <div class="nav-item" *ngIf="!(ethFriendlyName$ | async)">
             <a class="btn btn-secondary btn-md" href="/" role="button">Get Started</a>
           </div>
         </div>

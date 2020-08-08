@@ -22,5 +22,6 @@
       {{ (publication$ | async)?.name }}
     </button>
   </div>
-  <app-article-reader [article]="article$ | async" [summary]="metadata$ | async"></app-article-reader>
+  <app-article-reader [article]="article$ | async" [summary]="metadata$ | async" [author_alias]="author_alias$ | async">
+  </app-article-reader>
 </div>

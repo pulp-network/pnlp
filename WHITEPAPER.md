@@ -225,7 +225,7 @@ Attach the required fee.
 
 The resulting transaction serves as proof of payment. TODO:Key transfer. Upon the release of each "subscriber-only" article, the author must distribute a new key. This is an open question. Ideas?
 
-Triangle Key Exchange
+WIP: Triangle Key Exchange
 
 - The Author encrypts data with keyA.
 - The Aggregator/Reader receives keyA from Author through key exchange.

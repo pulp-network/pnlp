@@ -11,6 +11,7 @@ import { ArticleViewComponent } from './article-view/article-view.component';
 import { NewArticleComponent } from './new-article/new-article.component';
 import { NewPublicationComponent } from './new-publication/new-publication.component';
 import { PublicationListComponent } from './publication-list/publication-list.component';
+import { PendingPublicationComponent } from './pending-publication/pending-publication.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { PublicationListComponent } from './publication-list/publication-list.co
     ArticleViewComponent,
     NewArticleComponent,
     ArticleReaderComponent,
+    PendingPublicationComponent,
   ],
   exports: [NewPublicationComponent, ArticleListComponent, ArticleViewComponent, NewArticleComponent],
   imports: [

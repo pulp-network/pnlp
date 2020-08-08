@@ -15,8 +15,9 @@ export class ArticleViewComponent implements OnInit {
   article$: Observable<Article>;
   publication$: Observable<Publication>;
   metadata$: Observable<ArticleSummary>;
-  response$: Observable<{ article: Article; publication: Publication }>;
+  response$: Observable<{ article: Article; publication: Publication; author_alias: string }>;
   routeSubscription: Subscription;
+  author_alias$: Observable<string>;
   isLoading = false;
   error: string;
 
@@ -36,6 +37,7 @@ export class ArticleViewComponent implements OnInit {
       this.article$ = this.response$.pipe(map((r) => r.article));
       this.publication$ = this.response$.pipe(map((r) => r.publication));
       this.metadata$ = this.publication$.pipe(map((p) => p.articles[articleId]));
+      this.author_alias$ = this.response$.pipe(map((r) => r.author_alias));
     });
   }
 

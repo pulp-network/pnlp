@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { from, Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { IdentityService } from '../../@core/identity/identity.service';
 import { PublicationService } from '../../@core/publication/publication.service';
 import { Article, ValidArticleSlug } from '../../model/Article';
@@ -31,6 +32,9 @@ export class NewArticleComponent implements OnInit {
   submissionError: string;
   loadingError: string;
 
+  static MAX_SLUG_LENGTH = 48;
+  static MIN_SLUG_LENGTH = 3;
+
   get slugError() {
     if (!this.articleForm) {
       return '';
@@ -46,6 +50,10 @@ export class NewArticleComponent implements OnInit {
 
   get showSlugError() {
     return !this.articleForm.controls.slugControl.valid && this.articleForm.controls.slugControl.dirty;
+  }
+
+  get authorAlias$() {
+    return this.identityService.observableIdentity.pipe(map((i) => i.ens_alias || i.ethereum_identity.value));
   }
 
   constructor(
@@ -92,8 +100,8 @@ export class NewArticleComponent implements OnInit {
       subtitleControl: new FormControl('', []),
       slugControl: new FormControl('', [
         Validators.pattern(ValidArticleSlug),
-        Validators.maxLength(48),
-        Validators.minLength(3),
+        Validators.maxLength(NewArticleComponent.MAX_SLUG_LENGTH),
+        Validators.minLength(NewArticleComponent.MIN_SLUG_LENGTH),
       ]),
     });
     this.titleSubscription = this.articleForm.controls.titleControl.valueChanges.subscribe((val) => {
@@ -140,6 +148,13 @@ export class NewArticleComponent implements OnInit {
       .toLowerCase()
       .replace(/[\.,-\/#!'$%\^&\*;:{}=\-_`~()@\+\?><\[\]\+]/g, '')
       .replace(/\s+/g, '-');
-    return `${datePrefix}-${titleSuffix}`;
+
+    const full_slug = `${datePrefix}-${titleSuffix}`;
+
+    if (full_slug.length > NewArticleComponent.MAX_SLUG_LENGTH) {
+      return full_slug.slice(0, NewArticleComponent.MAX_SLUG_LENGTH - 1);
+    } else {
+      return full_slug;
+    }
   }
 }

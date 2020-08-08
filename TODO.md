@@ -1,13 +1,52 @@
 # TODO
 
+** TODO:Serve from IPFS Gateway **
+
+- right now if the app is served out of an IPFS gateway, all requests are relative to the root domain
+- ie: https://cloudflare-ipfs.com/ipfs/Qmc4T34pTKgSWB9Qwsr9MMphvcfw9trcKK4aZhkP6uFjPS
+- looks for css files here: https://cloudflare-ipfs.com/*.css
+- this doesn't work, they should be relative to /index.html
+- to fix this, I _think_ we need to play around with the `base` element in `index.html`
+
+**TODO:Publication Branded Top Bar**
+
+- add color preference to metadata
+- add logo preference to metadata
+- add publication-state.service
+- grab publication and transaction from url. if it exists:
+
+if transaction and complete, redirect to transactionless URL.
+if transaction and incomplete, set status=PENDING and await transaction
+on success, set status=ACTIVE and route to transactionless URL
+on fail, set status=FAILED and route to failed article URL
+
+```
+{
+   publication : Publication;
+   publication_status: PENDING | ACTIVE | FAILED;
+   transaction: TxHash;
+}
+```
+
+- add article-state.service
+- grab current article and transaction from url. if it exists:
+
+```
+{
+   article : Article;
+   article_status: PENDING | ACTIVE | FAILED;
+   transaction: TxHash;
+}
+```
+
+if transaction and complete, redirect to transactionless URL
+if transaction and incomplete, set status=PENDING and await transactions
+on success, set status=ACTIVE and route to transactionless URL
+on fail, set status=FAILED and route to failed article URL
+
 **TODO:AWAIT_TRANSACTION**dimetradon
 
 - we need an await transaction method on the blockchain service
-
-**TODO:DEPLOY_CONTRACT_MAINNET**dimetradon
-
-- we need to deploy the contract to the mainnet and
-- when we do that, we'll want to update the following places: TODO:ROPSTEN-MAINNET
 
 **TODO:SUBDOMAINS**dp-kb
 
@@ -18,6 +57,8 @@
 - sign in page
 - hide "create publication" page and "create article" page until user has identified themselves with metamask
 - sign in should observe redirect url
+
+**TODO:DO NOT REQUIRE SIGN IN ON ARTICLE LIST**
 
 **TODO:PUBLICATION_AUTHOR**dimetradon
 
@@ -33,6 +74,7 @@
 - TODO:HELP_LINKS: add help links to markdown spec, emoji spec, etc https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md
 - rename article-list page to publication-home page
 - TODO:RETURN_TYPES: we should use the strong IPNS/IPFS types across the codebase for ipns and ipfs
+- // TODO:convert to findFriendlyName (return alias OR address)
 
 ## Burner
 

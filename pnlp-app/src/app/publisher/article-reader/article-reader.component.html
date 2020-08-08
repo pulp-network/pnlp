@@ -7,15 +7,14 @@
       <div class="lead article-subtitle">
         {{ article.content.subtitle }}
       </div>
-      <div *ngIf="(nerdMode$ | async) && article?.author" class="small text-muted">
-        <!-- TODO:ROPSTEN-MAINNET: remove ropsten subdomain-->
-        <a [href]="'https://ropsten.etherscan.io/address/' + article?.author" class="text-info" target="_blank"
-          >author: {{ article?.author }}</a
-        >
+      <div *ngIf="article?.author" class="text-muted">
+        By:
+        <a [href]="'https://' + etherscanDomain + '/address/' + article?.author" class="text-info" target="_blank">{{
+          author_alias ? author_alias : article?.author
+        }}</a>
       </div>
       <div *ngIf="(nerdMode$ | async) && summary?.tx" class="small text-muted">
-        <!-- TODO:ROPSTEN-MAINNET: remove ropsten subdomain -->
-        <a [href]="'https://ropsten.etherscan.io/tx/' + summary?.tx" class="text-info" target="_blank"
+        <a [href]="'https://' + etherscanDomain + '/tx/' + summary?.tx" class="text-info" target="_blank"
           >proof-of-existence: {{ summary?.tx }}</a
         >
       </div>
@@ -37,8 +36,6 @@
   <hr class="my-4" />
 
   <div class="text-center mb-5">
-    <small
-      >This article {{ preview ? 'to be' : 'was' }} published on the distributed web using the pulp protocol.</small
-    >
+    <small>{{ preview ? 'to be' : '' }} published on the distributed web using the pulp protocol</small>
   </div>
 </div>

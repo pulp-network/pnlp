@@ -13,6 +13,8 @@ import { env } from './.env';
 export const environment = {
   production: false,
   hmr: true,
+  contractAddress: '0x88D632D0266CE47608FAE77ff4D37344FE562f12',
+  etherscanDomain: 'ropsten.etherscan.io',
   version: env.npm_package_version + '-dev',
   serverUrl: '/api',
   defaultLanguage: 'en-US',

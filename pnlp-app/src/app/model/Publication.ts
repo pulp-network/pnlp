@@ -14,6 +14,7 @@ export interface ArticleSummary {
   ipfs_address: string;
   author: string;
   title: string;
+  subtitle: string;
   timestamp: Date;
 }
 

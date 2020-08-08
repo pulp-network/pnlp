@@ -7,6 +7,7 @@ import { KeystoreService } from '../persistence/keystore.service';
 export type PnlpIdentity = {
   ipns_identity: Libp2pCryptoIdentity;
   ethereum_identity: EthereumAddress;
+  ens_alias: string;
 };
 
 @Injectable({
@@ -20,9 +21,11 @@ export class IdentityService {
 
   public async loadEthereumAddress() {
     const ethereumAddress = await this.blockchainService.getAccount();
+    const ens_alias = await this.blockchainService.lookupAddress(ethereumAddress);
     this.identity.next({
       ipns_identity: undefined,
       ethereum_identity: ethereumAddress,
+      ens_alias: ens_alias,
     });
   }
 
@@ -31,10 +34,12 @@ export class IdentityService {
       return;
     }
     const ethereumAddress = await this.blockchainService.getAccount();
+    const ens_alias = await this.blockchainService.lookupAddress(ethereumAddress);
     const ipns_identity = await this.keystoreService.generateLibp2pCryptoIdentity(ethereumAddress);
     this.identity.next({
       ipns_identity,
       ethereum_identity: ethereumAddress,
+      ens_alias: ens_alias,
     });
   }
 

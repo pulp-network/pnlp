@@ -15,7 +15,7 @@ import { PublicationService } from '../../@core/publication/publication.service'
 export class HeaderComponent implements OnInit {
   menuHidden = true;
   observableIdentity$: Observable<PnlpIdentity>;
-  ethAddress$: Observable<string>;
+  ethFriendlyName$: Observable<string>;
   myPublications$: Observable<string[]>; //TODO:get publication list on identity load
 
   constructor(
@@ -33,9 +33,15 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     // this.identityService.loadEthereumAddress();
     this.observableIdentity$ = this.identityService.observableIdentity;
-    this.ethAddress$ = this.observableIdentity$.pipe(
+    this.ethFriendlyName$ = this.observableIdentity$.pipe(
       map((i) => {
-        return i?.ethereum_identity?.value;
+        if (i?.ens_alias) {
+          return i?.ens_alias;
+        } else if (i?.ethereum_identity?.value) {
+          return i?.ethereum_identity?.value?.slice(0, 10) + '...';
+        } else {
+          return null;
+        }
       })
     );
   }

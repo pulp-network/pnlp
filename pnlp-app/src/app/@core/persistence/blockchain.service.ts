@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BigNumber, Contract, providers } from 'ethers';
+import { environment } from '../../../environments/environment';
 // If this line fails when you build, please run `truffle build` from `pnlp-contract`.
 import ContractJson from './pnlp.json';
 
@@ -41,8 +42,7 @@ type WindowInstanceWithEthereum = Window & typeof globalThis & { ethereum?: prov
 })
 export class BlockchainService {
   private contractAbi = ContractJson.abi;
-  // TODO:ROPSTEN-MAINNET: change to mainnet address
-  private contractAddress: EthereumAddress = new EthereumAddress('0x6a9C839035ebb6FD46026E05a89759fF9a1d1db0');
+  private contractAddress: EthereumAddress = new EthereumAddress(environment.contractAddress);
 
   private provider: providers.Web3Provider;
   private signer: providers.JsonRpcSigner;
@@ -69,7 +69,7 @@ export class BlockchainService {
   }
 
   public async awaitTransaction(transaction: string) {
-    // TODO:AWAIT_TRANSACTION;
+    return this.provider.waitForTransaction(transaction, 1, 120000);
   }
 
   public async getPublication(publication_slug: string): Promise<PublicationRecord | null> {
@@ -155,6 +155,11 @@ export class BlockchainService {
         throw new BlockchainError(error.data.message.replace('VM Exception while processing transaction: revert ', ''));
       }
     }
+  }
+
+  // TODO:convert to findFriendlyName (return alias OR address)
+  public async lookupAddress(address: EthereumAddress) {
+    return this.provider.lookupAddress(address.value);
   }
 
   public async getAccount(): Promise<EthereumAddress> {

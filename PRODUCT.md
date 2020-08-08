@@ -15,7 +15,7 @@ pnlp (pronounced "pulp") is an open publishing platform for recurring written co
 - A better experience for authors leads to more and better content for subscribers.
 - Browse the best writing on the open web. Support the authors you value most. Subscribe for convenience.
 
-## For Software Clients
+## For Aggregators
 
 - Building a better experience for authors and/or subscribers? When authors convert to you, you can access all their old content too.
 - Share in the monetization of publishing. Set your rates or let the author set them. Let authors or subscribers contribute to your service directly.

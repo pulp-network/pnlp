@@ -148,7 +148,8 @@
         </div>
       </div>
 
-      <app-article-reader [article]="previewArticle" [preview]="true"></app-article-reader>
+      <app-article-reader [article]="previewArticle" [preview]="true" [author_alias]="authorAlias$ | async">
+      </app-article-reader>
     </div>
   </div>
 </div>

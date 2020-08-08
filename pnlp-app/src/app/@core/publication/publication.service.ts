@@ -4,6 +4,7 @@ import { Publication, PublicationValidator } from '../../model/Publication';
 import { Validator } from '../../model/Validator';
 import {
   BlockchainService,
+  EthereumAddress,
   IPFSHash,
   IPNSHash,
   PublicationRecord,
@@ -101,7 +102,7 @@ export class PublicationService {
 
   public async listArticles(
     publication_slug: string
-  ): Promise<{ publication: Publication; metadata: PublicationRecord }> {
+  ): Promise<{ publication: Publication; metadata: PublicationRecord; author_alias_map: { [key: string]: string } }> {
     console.debug(`listing articles from: ${publication_slug}...`);
 
     const publication_record = await this.blockchainService.getPublication(publication_slug);
@@ -112,16 +113,30 @@ export class PublicationService {
       `/ipfs/${ipfs_hash.value}/${publication_slug}/${PublicationService.INDEX_FILENAME}`
     );
 
+    const author_alias_map = {};
+    for (const article of Object.values(publication.articles)) {
+      if (!author_alias_map[article.author]) {
+        author_alias_map[article.author] = article.author;
+        const ens_alias = await this.blockchainService.lookupAddress(new EthereumAddress(article.author));
+        if (ens_alias) {
+          author_alias_map[article.author] = ens_alias;
+        } else {
+          author_alias_map[article.author] = article.author;
+        }
+      }
+    }
+
     return {
       metadata: publication_record,
       publication,
+      author_alias_map,
     };
   }
 
   public async getArticle(
     publication_slug: string,
     article_index: string
-  ): Promise<{ publication: Publication; article: Article }> {
+  ): Promise<{ publication: Publication; article: Article; author_alias: string }> {
     console.debug(`fetching article: ${publication_slug}/${article_index}...`);
 
     const publication_record = await this.blockchainService.getPublication(publication_slug);
@@ -140,10 +155,16 @@ export class PublicationService {
       throw new Error(`Article pulp/${publication_slug}/${article_index} does not exist or is not visible`);
     }
 
+    let author_alias = await this.blockchainService.lookupAddress(new EthereumAddress(article.author));
+    if (!author_alias) {
+      author_alias = article.author;
+    }
+
     Validator.throwIfInvalid(article, ArticleValidator);
     return {
       publication,
       article,
+      author_alias,
     };
   }
 
@@ -160,6 +181,7 @@ export class PublicationService {
       title: article.content.title,
       ipfs_address: ipfs_hash.value,
       author: article.author,
+      subtitle: article.content.subtitle,
       timestamp: article.timestamp,
     };
 

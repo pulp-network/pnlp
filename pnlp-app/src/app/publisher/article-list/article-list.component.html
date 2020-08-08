@@ -1,17 +1,29 @@
 <app-loader *ngIf="isLoading"></app-loader>
 <app-error [error]="error"></app-error>
 <div class="mt-4 d-flex justify-content-center" *ngIf="!isLoading && !error">
+  <div *ngIf="isPending" class="text-center">
+    <!-- <img src="assets/pnlp-logo-grey@190.png" alt="pulp logo" height="190px" /> -->
+    <img src="assets/pnlp-network-logo-grey.png" alt="pulp logo" height="190px" />
+    <div class="lead text-muted">Etching your publication among the stars</div>
+    <div class="small text-muted">
+      this can take a few minutes (
+      <a [href]="pendingUrl | async" class="text-info" target="_blank">watch it here</a>
+      )
+    </div>
+  </div>
+
   <div *ngIf="response$ | async" class="flex-grow-1">
     <div class="d-flex justify-content-between">
       <div class="mb-3">
         <div class="lead">
           {{ (publication$ | async)?.name }}
         </div>
-        <div class="small text-muted">
+        <div class="lead text-muted article-tertiary">
           {{ (publication$ | async)?.description }}
         </div>
-        <div *ngIf="nerdMode$ | async" class="small text-muted">
-          <a [href]="ipnsUrl$ | async" class="text-info" target="_blank"
+        <div *ngIf="nerdMode$ | async" class="lead text-muted article-metadata">
+          directory:
+          <a [href]="ipnsUrl$ | async" target="_blank"
             >ipns/{{ (metadata$ | async)?.ipns_hash?.value }}/{{ (publication$ | async)?.slug }}</a
           >
         </div>
@@ -43,39 +55,43 @@
       </div>
     </div>
 
-    <div class="list-group" *ngIf="!error">
-      <a *ngFor="let article of articles$ | async" class="list-group-item">
+    <div class="list-group list-group-flush" *ngIf="!error">
+      <a *ngFor="let article of articles$ | async" class="list-group-item article-block">
         <div class="flex-column align-items-start">
           <div class="d-flex w-100 justify-content-between">
-            <span [routerLink]="[article.slug]" style="cursor: pointer;">
+            <span [routerLink]="[article.slug]" style="cursor: pointer;" class="lead article-title">
               {{ article?.title }}
             </span>
-            <span class="small text-muted">
+            <span class="lead text-muted article-tertiary">
               {{ article?.timestamp | date: 'short' }}
             </span>
           </div>
-          <div *ngIf="article?.author" class="small text-info">
-            <a [href]="'https://ropsten.etherscan.io/address/' + article?.author" class="text-info" target="_blank"
-              >By: {{ article?.author }}</a
+          <div *ngIf="article?.subtitle" class="text-muted lead article-secondary">
+            {{ article?.subtitle }}
+          </div>
+          <div *ngIf="article?.author" class="lead text-muted article-tertiary">
+            By:
+            <a [href]="'https://' + etherscanDomain + '/address/' + article?.author" target="_blank">{{
+              article?.alias
+            }}</a>
+          </div>
+          <div *ngIf="(nerdMode$ | async) && article?.ipfs_address" class="lead text-muted article-metadata">
+            location:
+            <a [href]="'https://explore.ipld.io/#/explore/' + article?.ipfs_address" target="_blank"
+              >ipfs/{{ article?.ipfs_address }}</a
             >
           </div>
-          <div *ngIf="(nerdMode$ | async) && article?.ipfs_address" class="small text-muted">
-            <a [href]="'https://explore.ipld.io/#/explore/' + article?.ipfs_address" class="text-info" target="_blank"
-              >location: ipfs/{{ article?.ipfs_address }}</a
-            >
-          </div>
-          <div *ngIf="(nerdMode$ | async) && article?.tx" class="small text-muted">
-            <!-- TODO:ROPSTEN-MAINNET: remove ropsten subdomain -->
-            <a [href]="'https://ropsten.etherscan.io/tx/' + article?.tx" class="text-info" target="_blank"
-              >proof-of-existence: {{ article?.tx }}</a
-            >
+          <div *ngIf="(nerdMode$ | async) && article?.tx" class="lead text-muted article-metadata">
+            proof-of-existence:
+            <a [href]="'https://' + etherscanDomain + '/tx/' + article?.tx" target="_blank">{{ article?.tx }}</a>
           </div>
         </div>
       </a>
     </div>
 
     <div *ngIf="!(articles$ | async)?.length" class="text-center">
-      <img src="assets/pnlp-logo-grey@190.png" alt="pulp logo" height="190px" />
+      <!-- <img src="assets/pnlp-logo-grey@190.png" alt="pulp logo" height="190px" /> -->
+      <img src="assets/pnlp-network-logo-grey.png" alt="pulp logo" height="190px" />
       <div class="lead text-muted">There are no articles here yet</div>
     </div>
   </div>

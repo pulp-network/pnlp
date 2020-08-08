@@ -70,8 +70,8 @@ export class NewPublicationComponent implements OnInit {
       .then(({ transaction, publication, ipns_address }) => {
         this.router.navigate([`pnlp`, slug], {
           queryParams: {
-            ipns: ipns_address,
-            transaction,
+            ipns: ipns_address.value,
+            transaction: transaction.hash,
             publication_name: publication.name,
           },
         });

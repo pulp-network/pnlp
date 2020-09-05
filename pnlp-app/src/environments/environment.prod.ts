@@ -4,12 +4,11 @@
 // This is useful for granularity you might need beyond just the environment.
 // Note that as usual, any environment variables you expose through it will end up in your
 // bundle, and you should not use it for any sensitive information like passwords or keys.
-import { env } from './.env';
 
 export const environment = {
   production: true,
   hmr: false,
-  version: env.npm_package_version,
+  version: '0.0.1',
   contractAddress: '0x6a9C839035ebb6FD46026E05a89759fF9a1d1db0',
   etherscanDomain: 'etherscan.io',
   serverUrl: '/api',

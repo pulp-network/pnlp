@@ -84,3 +84,9 @@ on fail, set status=FAILED and route to failed article URL
   - stub auth0 key request and return developer key
 * beta flow: ask for email list in auth0
   - auth0 can simply be a script that signs and returns requests after checking email list
+
+- refactor pulp protocol interaction code into typescript reference library
+- add a second implementation: python? go?
+- add i18n support
+- use web-accessibility audit tool to make sure pnlp.network is fully accessible under https://webaim.org/ standards
+- open gated beta access publishing program

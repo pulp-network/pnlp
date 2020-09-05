@@ -8,14 +8,13 @@
 // This is useful for granularity you might need beyond just the environment.
 // Note that as usual, any environment variables you expose through it will end up in your
 // bundle, and you should not use it for any sensitive information like passwords or keys.
-import { env } from './.env';
 
 export const environment = {
   production: false,
   hmr: true,
   contractAddress: '0x88D632D0266CE47608FAE77ff4D37344FE562f12',
   etherscanDomain: 'ropsten.etherscan.io',
-  version: env.npm_package_version + '-dev',
+  version: '0.0.1',
   serverUrl: '/api',
   defaultLanguage: 'en-US',
   supportedLanguages: ['en-US', 'fr-FR'],

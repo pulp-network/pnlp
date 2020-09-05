@@ -28,6 +28,13 @@ By default, the local app will connect to our ropsten network contract (specifie
 - Run `cd pnlp-contract && truffle build && truffle migrate`
 - Copy the deployed contract address into `environment.ts`, you may need to bounce the app
 
+#### Development Lifecycle
+* **TLDR; Features go to the `ropsten` branch first, we periodically merge `ropsten` into `master`**
+* For ongoing feature development, make a feature branch off of the [ropsten](https://github.com/pulp-network/pnlp/commits/ropsten) branch.
+* At the completion of the feature, merge the feature branch into the ropsten branch. Consider rebasing and squashing your commits before merge for easier merge and a cleaner history!
+* Commits to ropsten are auto-built and auto-deployed by fleek to: https://ropsten.pulp.network
+* Once in a while we merge the `ropsten` branch into the `master` branch. Commits to master are auto-built and deployed to production: https://pulp.network
+
 #### Brief Stack Overview
 
 - javascript browser application; Angular

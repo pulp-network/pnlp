@@ -6,11 +6,11 @@ pnlp is a decentralized application that serves as the reference implementation 
 
 # About
 
-[10,000 foot view](https://github.com/pnlp-network/pnlp/blob/master/SLIDES.md)
+[10,000 foot view](https://github.com/pulp-network/pnlp/blob/master/SLIDES.md)
 
-[Work in Progress Whitepaper](https://github.com/pnlp-network/pnlp/blob/master/WHITEPAPER.md)
+[Work in Progress Whitepaper](https://github.com/pulp-network/pnlp/blob/master/WHITEPAPER.md)
 
-[Project Principles](https://github.com/pnlp-network/pnlp/blob/master/PRINCIPLES.md)
+[Project Principles](https://github.com/pulp-network/pnlp/blob/master/PRINCIPLES.md)
 
 # Development
 _Instructions for contributing to this repository_

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IPFSHash, IPNSHash } from '../persistence/blockchain.service';
+import { IpfsHash, IpnsHash } from '@app/model/ethereum';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +12,11 @@ export class IpnsResolutionService {
    * Currently the only known public mechanism for resolving IPNS is the textile website. They don't expose this
    * functionality in the API yet. Currently we're just scraping the HTML for this information.
    *
-   * @param ipns
+   * @param ipns_hash
    */
-  public async resolveIpns(ipns: IPNSHash): Promise<IPFSHash> {
+  public async resolveIpns(ipns_hash: IpnsHash): Promise<IpfsHash> {
     const response = await this.httpClient
-      .get(`https://${ipns.value}.ipns.hub.textile.io/`, {
+      .get(`https://${ipns_hash}.ipns.hub.textile.io/`, {
         headers: new HttpHeaders({
           Accept: 'text/html',
           'Content-Type': 'application/json',
@@ -35,6 +35,6 @@ export class IpnsResolutionService {
       throw new Error('The IPNS resolver is currently not working. Please contact pnlp development team on github.');
     }
 
-    return new IPFSHash(matches[1]);
+    return matches[1];
   }
 }

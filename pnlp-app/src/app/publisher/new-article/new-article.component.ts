@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PnlpService } from '@app/@core/pnlp/pnlp.service';
 import { from, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IdentityService } from '../../@core/identity/identity.service';
-import { PublicationService } from '../../@core/publication/publication.service';
-import { Article, ValidArticleSlug } from '../../model/Article';
-import { Publication } from '../../model/Publication';
+import { Article, ValidArticleSlug } from '../../model/article';
+import { Publication } from '../../model/publication';
 
 @Component({
   selector: 'app-new-article',
@@ -53,11 +53,11 @@ export class NewArticleComponent implements OnInit {
   }
 
   get authorAlias$() {
-    return this.identityService.observableIdentity.pipe(map((i) => i.ens_alias || i.ethereum_identity.value));
+    return this.identityService.observableIdentity.pipe(map((i) => i.ens_alias || i.ethereum_identity));
   }
 
   constructor(
-    private publicationService: PublicationService,
+    private pnlpService: PnlpService,
     private route: ActivatedRoute,
     private router: Router,
     private identityService: IdentityService
@@ -72,7 +72,7 @@ export class NewArticleComponent implements OnInit {
       }
       this.isLoading = true;
       this.publication$ = from(
-        this.publicationService
+        this.pnlpService.pnlpClient
           .getPublication(this.publicationSubdomain)
           .catch((err) => (this.loadingError = err.message || err))
           .finally(() => (this.isLoading = false))
@@ -116,7 +116,7 @@ export class NewArticleComponent implements OnInit {
     const article = this.mapFormToArticle();
     this.isCreating = true;
     this.submissionError = null;
-    this.publicationService
+    this.pnlpService.pnlpClient
       .createArticle(this.publicationSubdomain, article)
       .then((_) => {
         this.router.navigate(['pnlp', this.publicationSubdomain, article.slug]);
@@ -129,7 +129,7 @@ export class NewArticleComponent implements OnInit {
     return {
       slug: this.articleForm.controls.slugControl.value,
       timestamp: new Date(),
-      author: this.identityService.identity.value.ethereum_identity.value,
+      author: this.identityService.identity.value.ethereum_identity,
       content: {
         title: this.articleForm.controls.titleControl.value,
         subtitle: this.articleForm.controls.subtitleControl.value,

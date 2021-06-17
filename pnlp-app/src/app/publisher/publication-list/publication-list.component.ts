@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { PnlpService } from '@app/@core/pnlp/pnlp.service';
 import { from, Observable } from 'rxjs';
-import { PublicationService } from '../../@core/publication/publication.service';
 
 @Component({
   selector: 'app-publication-list',
@@ -11,9 +11,9 @@ export class PublicationListComponent implements OnInit {
   publicationList$: Observable<string[]>;
   error: any;
 
-  constructor(private publicationService: PublicationService) {}
+  constructor(private pnlpService: PnlpService) {}
 
   ngOnInit(): void {
-    this.publicationList$ = from(this.publicationService.listPublications().catch((err) => (this.error = err)));
+    this.publicationList$ = from(this.pnlpService.pnlpClient.listPublications().catch((err) => (this.error = err)));
   }
 }

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { PnlpService } from '@app/@core/pnlp/pnlp.service';
 import { providers } from 'ethers';
 import { from, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { BlockchainService, PublicationRecord } from '../../@core/persistence/blockchain.service';
 import { PreferencesService } from '../../@core/preferences/preferences.service';
-import { PublicationService } from '../../@core/publication/publication.service';
-import { Publication } from '../../model/Publication';
+import { Publication } from '../../model/publication';
 
 @Component({
   selector: 'app-article-list',
@@ -46,7 +46,7 @@ export class ArticleListComponent implements OnInit {
   >;
 
   constructor(
-    private publicationService: PublicationService,
+    private pnlpService: PnlpService,
     private blockchainService: BlockchainService,
     private route: ActivatedRoute,
     private preferencesService: PreferencesService,
@@ -100,7 +100,7 @@ export class ArticleListComponent implements OnInit {
   loadEntities(publicationSlug: string) {
     this.isLoading = true;
     this.response$ = from(
-      this.publicationService
+      this.pnlpService.pnlpClient
         .listArticles(this.publicationSlug)
         .catch((err) => {
           this.error = err?.message || err;
@@ -136,7 +136,7 @@ export class ArticleListComponent implements OnInit {
       })
     );
     this.ipnsUrl$ = this.response$.pipe(
-      map((r) => `https://${r.metadata.ipns_hash.value}.ipns.hub.textile.io/${r.publication.slug}`)
+      map((r) => `https://${r.metadata.ipns_hash}.ipns.hub.textile.io/${r.publication.slug}`)
     );
   }
 }

@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Article, ArticleValidator } from '../../model/Article';
-import { Publication, PublicationValidator } from '../../model/Publication';
-import { Validator } from '../../model/Validator';
-import {
-  BlockchainService,
-  EthereumAddress,
-  IPFSHash,
-  IPNSHash,
-  PublicationRecord,
-  TransactionResult,
-} from '../persistence/blockchain.service';
+import { IpfsHash, IpnsHash } from '@app/model/ethereum';
+import { Article, ArticleValidator } from '../../model/article';
+import { Publication, PublicationValidator } from '../../model/publication';
+import { Validator } from '../../model/validation';
+import { BlockchainService, PublicationRecord, TransactionResult } from '../persistence/blockchain.service';
 import { PersistenceService } from '../persistence/persistence.service';
 import { IpnsResolutionService } from '../resolution/ipns-resolution.service';
 
@@ -17,7 +11,7 @@ import { IpnsResolutionService } from '../resolution/ipns-resolution.service';
   providedIn: 'root',
 })
 export class PublicationService {
-  private static INDEX_FILENAME = '.pulp.json';
+  private static INDEX_FILENAME = '.pnlp.json';
   private static RESERVED_NAMES = ['.textileseed'];
   private static ROOT = '/';
 
@@ -29,7 +23,7 @@ export class PublicationService {
 
   public async createPublication(
     publication: Publication
-  ): Promise<{ publication: Publication; ipns_address: IPNSHash; transaction: TransactionResult }> {
+  ): Promise<{ publication: Publication; ipns_address: IpnsHash; transaction: TransactionResult }> {
     Validator.throwIfInvalid(publication, PublicationValidator);
 
     console.debug(`creating a new publication: ${JSON.stringify(publication)}`);
@@ -51,7 +45,7 @@ export class PublicationService {
   public async createArticle(
     publication_slug: string,
     article: Article
-  ): Promise<{ transaction: TransactionResult; ipns_address: IPNSHash; ipfs_address: IPFSHash }> {
+  ): Promise<{ transaction: TransactionResult; ipns_address: IpnsHash; ipfs_address: IpfsHash }> {
     Validator.throwIfInvalid(article, ArticleValidator);
     console.debug(
       `publishing article ${article.slug}; ${article.content.title}; subtitle length ${article.content.subtitle?.length}; content length ${article.content.body.length}`
@@ -61,7 +55,7 @@ export class PublicationService {
     console.debug('ipns_address: ', ipns_address);
 
     const bucket_address = await this.ipnsResolutionService.resolveIpns(ipns_address);
-    const ipfs_address = new IPFSHash(`${bucket_address.value}/${publication_slug}/${article.slug}`);
+    const ipfs_address = `${bucket_address}/${publication_slug}/${article.slug}`;
 
     const transaction = await this.blockchainService.publishArticle(publication_slug, ipfs_address);
     // update publication with new transaction ID and article slug
@@ -82,7 +76,7 @@ export class PublicationService {
     const ipfs_hash = await this.ipnsResolutionService.resolveIpns(publication_record.ipns_hash);
 
     const publication = await this.persistenceService.catIpfsJson<Publication>(
-      `/ipfs/${ipfs_hash.value}/${publication_slug}/${PublicationService.INDEX_FILENAME}`
+      `/ipfs/${ipfs_hash}/${publication_slug}/${PublicationService.INDEX_FILENAME}`
     );
 
     Validator.throwIfInvalid(publication, PublicationValidator);
@@ -91,13 +85,11 @@ export class PublicationService {
 
   public async listPublications(): Promise<string[]> {
     console.debug(`listing publications...`);
-    const pathReply = await this.persistenceService.lsIpns(PublicationService.ROOT);
-    if (!pathReply.item) {
+    const items = await this.persistenceService.lsIpns(PublicationService.ROOT);
+    if (!items) {
       throw new Error(`The root publication path does not exist or is not visible`);
     }
-    return pathReply.item.itemsList
-      .filter((i) => PublicationService.RESERVED_NAMES.every((r) => i.name !== r))
-      .map((p) => p.name);
+    return items.filter((i) => PublicationService.RESERVED_NAMES.every((r) => i !== r));
   }
 
   public async listArticles(
@@ -110,14 +102,14 @@ export class PublicationService {
     const ipfs_hash = await this.ipnsResolutionService.resolveIpns(publication_record.ipns_hash);
 
     const publication = await this.persistenceService.catIpfsJson<Publication>(
-      `/ipfs/${ipfs_hash.value}/${publication_slug}/${PublicationService.INDEX_FILENAME}`
+      `/ipfs/${ipfs_hash}/${publication_slug}/${PublicationService.INDEX_FILENAME}`
     );
 
     const author_alias_map = {};
     for (const article of Object.values(publication.articles)) {
       if (!author_alias_map[article.author]) {
         author_alias_map[article.author] = article.author;
-        const ens_alias = await this.blockchainService.lookupAddress(new EthereumAddress(article.author));
+        const ens_alias = await this.blockchainService.lookupEns(article.author);
         if (ens_alias) {
           author_alias_map[article.author] = ens_alias;
         } else {
@@ -144,18 +136,18 @@ export class PublicationService {
     const ipfs_hash = await this.ipnsResolutionService.resolveIpns(publication_record.ipns_hash);
 
     const article = await this.persistenceService.catIpfsJson<Article>(
-      `/ipfs/${ipfs_hash.value}/${publication_slug}/${article_index}`
+      `/ipfs/${ipfs_hash}/${publication_slug}/${article_index}`
     );
 
     const publication = await this.persistenceService.catIpfsJson<Publication>(
-      `/ipfs/${ipfs_hash.value}/${publication_slug}/${PublicationService.INDEX_FILENAME}`
+      `/ipfs/${ipfs_hash}/${publication_slug}/${PublicationService.INDEX_FILENAME}`
     );
 
     if (!article) {
       throw new Error(`Article pulp/${publication_slug}/${article_index} does not exist or is not visible`);
     }
 
-    let author_alias = await this.blockchainService.lookupAddress(new EthereumAddress(article.author));
+    let author_alias = await this.blockchainService.lookupEns(article.author);
     if (!author_alias) {
       author_alias = article.author;
     }
@@ -172,14 +164,14 @@ export class PublicationService {
     publication_slug: string,
     article: Article,
     transactionHash: string,
-    ipfs_hash: IPFSHash
-  ): Promise<IPNSHash> {
+    ipfs_hash: IpfsHash
+  ): Promise<IpnsHash> {
     const publication = await this.getPublication(publication_slug);
     publication.articles = publication.articles || {};
     publication.articles[article.slug] = {
       tx: transactionHash,
       title: article.content.title,
-      ipfs_address: ipfs_hash.value,
+      ipfs_address: ipfs_hash,
       author: article.author,
       subtitle: article.content.subtitle,
       timestamp: article.timestamp,

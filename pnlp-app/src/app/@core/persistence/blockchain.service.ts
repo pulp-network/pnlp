@@ -1,22 +1,12 @@
 import { Injectable } from '@angular/core';
+import { EnsName, EthereumAddress, IpfsHash } from '@app/model/ethereum';
 import { BigNumber, Contract, providers } from 'ethers';
 import { environment } from '../../../environments/environment';
 // If this line fails when you build, please run `truffle build` from `pnlp-contract`.
 import ContractJson from './pnlp.json';
 
-class StrongType<Definition, Type> {
-  private _type: Definition;
-  constructor(public value?: Type) {}
-}
-
-export class IPNSHash extends StrongType<'ipns', string> {}
-export class IPFSHash extends StrongType<'ipfs', string> {}
-
-export class EthereumTransaction extends StrongType<'ethereum_tx', string> {}
-export class EthereumAddress extends StrongType<'ethereum_address', string> {}
-
 export class PublicationRecord {
-  constructor(public ipns_hash: IPNSHash, public author: EthereumAddress, public timestamp: Date) {}
+  constructor(public ipns_hash: IpfsHash, public author: EthereumAddress, public timestamp: Date) {}
 }
 
 class ArticleRecord {
@@ -42,7 +32,7 @@ type WindowInstanceWithEthereum = Window & typeof globalThis & { ethereum?: prov
 })
 export class BlockchainService {
   private contractAbi = ContractJson.abi;
-  private contractAddress: EthereumAddress = new EthereumAddress(environment.contractAddress);
+  private contractAddress: EthereumAddress = environment.contractAddress;
 
   private provider: providers.Web3Provider;
   private signer: providers.JsonRpcSigner;
@@ -50,14 +40,14 @@ export class BlockchainService {
 
   private initialized = false;
 
-  public async createPublication(publication_slug: string, ipns_hash: IPNSHash): Promise<TransactionResult> {
+  public async createPublication(publication_slug: string, ipns_hash: IpfsHash): Promise<TransactionResult> {
     if (!this.initialized) {
       this.init();
     }
 
     try {
-      console.debug(`creating publication on ethereum: ${publication_slug}:${ipns_hash.value}`);
-      const transaction = await this.contract.functions.createPublication(publication_slug, ipns_hash.value);
+      console.debug(`creating publication on ethereum: ${publication_slug}:${ipns_hash}`);
+      const transaction = await this.contract.functions.createPublication(publication_slug, ipns_hash);
       console.debug('transaction result: ', transaction);
       return transaction;
     } catch (error) {
@@ -108,14 +98,14 @@ export class BlockchainService {
     );
 
     const pub_record = new PublicationRecord(
-      new IPNSHash(publication.ipnsHash.replace('ipns/', '')),
-      new EthereumAddress(publication.author),
+      publication.ipnsHash.replace('ipns/', ''),
+      publication.author,
       new Date(publication.timestamp.toNumber() * 1000)
     );
     return pub_record;
   }
 
-  public async getArticle(ipfs_hash: IPFSHash): Promise<ArticleRecord | null> {
+  public async getArticle(ipfs_hash: IpfsHash): Promise<ArticleRecord | null> {
     if (!this.initialized) {
       this.init();
     }
@@ -132,21 +122,21 @@ export class BlockchainService {
       return null;
     }
 
-    return new ArticleRecord(new EthereumAddress(article.author), new Date(article.timestamp.toNumber() * 1000));
+    return new ArticleRecord(article.author, new Date(article.timestamp.toNumber() * 1000));
   }
 
-  public async publishArticle(publication_slug: string, ipfs_hash: IPFSHash): Promise<TransactionResult> {
+  public async publishArticle(publication_slug: string, ipfs_hash: IpfsHash): Promise<TransactionResult> {
     if (!this.initialized) {
       this.init();
     }
-    if (!publication_slug || !ipfs_hash.value) {
-      throw new Error(`publication_slug (${publication_slug}) and ipfs_hash (${ipfs_hash.value}) are required fields`);
+    if (!publication_slug || !ipfs_hash) {
+      throw new Error(`publication_slug (${publication_slug}) and ipfs_hash (${ipfs_hash}) are required fields`);
     }
 
     try {
-      console.debug(`creating article on ethereum: ${publication_slug}:${ipfs_hash.value}`);
+      console.debug(`creating article on ethereum: ${publication_slug}:${ipfs_hash}`);
 
-      const transaction = await this.contract.functions.publishArticle(publication_slug, ipfs_hash.value);
+      const transaction = await this.contract.functions.publishArticle(publication_slug, ipfs_hash);
       console.debug('transaction result: ', transaction);
       return transaction;
     } catch (error) {
@@ -158,8 +148,12 @@ export class BlockchainService {
   }
 
   // TODO:convert to findFriendlyName (return alias OR address)
-  public async lookupAddress(address: EthereumAddress) {
-    return this.provider.lookupAddress(address.value);
+  public async lookupEns(address: EthereumAddress): Promise<EnsName | EthereumAddress> {
+    const ens_alias = this.provider.lookupAddress(address).catch((e) => {
+      console.log("Could not communicate with ENS. This is expected if you're not on ropsten or mainnet." + e);
+      return address;
+    });
+    return ens_alias;
   }
 
   public async getAccount(): Promise<EthereumAddress> {
@@ -172,7 +166,7 @@ export class BlockchainService {
       throw new BlockchainError('No account is provided. Please provide an account to this application.');
     }
 
-    return new EthereumAddress(accounts[0]);
+    return accounts[0];
   }
 
   public async signText(text: string): Promise<string> {
@@ -214,7 +208,7 @@ export class BlockchainService {
     console.debug('initializing web3 provider...');
     this.provider = new providers.Web3Provider((window as WindowInstanceWithEthereum).ethereum);
     this.signer = this.provider.getSigner();
-    this.contract = new Contract(this.contractAddress.value, this.contractAbi, this.signer);
+    this.contract = new Contract(this.contractAddress, this.contractAbi, this.signer);
 
     this.initialized = true;
   }

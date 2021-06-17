@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { PreferencesService } from '../../@core/preferences/preferences.service';
-import { Article } from '../../model/Article';
-import { ArticleSummary } from '../../model/Publication';
+import { Article } from '../../model/article';
+import { ArticleSummary } from '../../model/publication';
 
 @Component({
   selector: 'app-article-reader',

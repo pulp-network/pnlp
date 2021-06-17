@@ -1,8 +1,16 @@
+import { AuthorAddress, IpfsHash, IpnsHash, TransactionResult } from '@app/model/ethereum';
+
+export interface ArticleMetadata {
+  transaction: TransactionResult;
+  ipns_address: IpnsHash;
+  ipfs_address: IpfsHash;
+}
+
 export interface Article {
   slug: string;
   timestamp: Date;
-  author: string;
-  edit_of?: string; // ipfs hash of parent (for which this represents a modification)
+  author: AuthorAddress;
+  edit_of?: IpfsHash; // ipfs hash of parent (for which this represents a modification)
   retracted?: boolean;
   content: {
     title: string;

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PnlpService } from '@app/@core/pnlp/pnlp.service';
 import { IdentityService } from '../../@core/identity/identity.service';
-import { PublicationService } from '../../@core/publication/publication.service';
-import { ValidPublicationSlug } from '../../model/Publication';
+import { ValidPublicationSlug } from '../../model/publication';
 
 @Component({
   selector: 'app-new-publication',
@@ -32,11 +32,7 @@ export class NewPublicationComponent implements OnInit {
     return !this.publicationForm.controls.slugControl.valid && this.publicationForm.controls.slugControl.dirty;
   }
 
-  constructor(
-    private publicationService: PublicationService,
-    private router: Router,
-    private identityService: IdentityService
-  ) {}
+  constructor(private pnlpService: PnlpService, private router: Router, private identityService: IdentityService) {}
 
   ngOnInit(): void {
     this.initializeFormGroup();
@@ -58,11 +54,10 @@ export class NewPublicationComponent implements OnInit {
     this.submissionError = null;
     this.networkRequest = true;
     const slug = this.publicationForm.controls.slugControl.value;
-    this.publicationService
+    this.pnlpService.pnlpClient
       .createPublication({
         slug,
-        editor: this.identityService.identity.value.ethereum_identity.value,
-        founded: new Date(),
+        owner: this.identityService.identity.value.ethereum_identity,
         name: this.publicationForm.controls.nameControl.value,
         description: this.publicationForm.controls.descriptionControl.value,
         articles: {},
@@ -70,7 +65,7 @@ export class NewPublicationComponent implements OnInit {
       .then(({ transaction, publication, ipns_address }) => {
         this.router.navigate([`pnlp`, slug], {
           queryParams: {
-            ipns: ipns_address.value,
+            ipns: ipns_address,
             transaction: transaction.hash,
             publication_name: publication.name,
           },

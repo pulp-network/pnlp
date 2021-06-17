@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Identity } from '@app/model/identity';
 import { UserService } from '@app/user';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { IdentityService, PnlpIdentity } from '../../@core/identity/identity.service';
+import { IdentityService } from '../../@core/identity/identity.service';
 import { PreferencesService } from '../../@core/preferences/preferences.service';
-import { PublicationService } from '../../@core/publication/publication.service';
 
 @Component({
   selector: 'app-header',
@@ -14,7 +14,7 @@ import { PublicationService } from '../../@core/publication/publication.service'
 })
 export class HeaderComponent implements OnInit {
   menuHidden = true;
-  observableIdentity$: Observable<PnlpIdentity>;
+  observableIdentity$: Observable<Identity>;
   ethFriendlyName$: Observable<string>;
   myPublications$: Observable<string[]>; //TODO:get publication list on identity load
 
@@ -22,7 +22,6 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private userService: UserService,
     private identityService: IdentityService,
-    private publicationService: PublicationService,
     private preferencesService: PreferencesService
   ) {}
 
@@ -37,8 +36,8 @@ export class HeaderComponent implements OnInit {
       map((i) => {
         if (i?.ens_alias) {
           return i?.ens_alias;
-        } else if (i?.ethereum_identity?.value) {
-          return i?.ethereum_identity?.value?.slice(0, 10) + '...';
+        } else if (i?.ethereum_identity) {
+          return i?.ethereum_identity?.slice(0, 10) + '...';
         } else {
           return null;
         }

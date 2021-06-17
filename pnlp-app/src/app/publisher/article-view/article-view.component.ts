@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { PnlpService } from '@app/@core/pnlp/pnlp.service';
 import { from, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PublicationService } from '../../@core/publication/publication.service';
-import { Article } from '../../model/Article';
-import { ArticleSummary, Publication } from '../../model/Publication';
+import { Article } from '../../model/article';
+import { ArticleSummary, Publication } from '../../model/publication';
 
 @Component({
   selector: 'app-article-view',
@@ -21,7 +21,7 @@ export class ArticleViewComponent implements OnInit {
   isLoading = false;
   error: string;
 
-  constructor(private publicationService: PublicationService, private route: ActivatedRoute) {}
+  constructor(private pnlpService: PnlpService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.routeSubscription = this.route.params.subscribe((params) => {
@@ -29,7 +29,7 @@ export class ArticleViewComponent implements OnInit {
       const articleId = params['article_id'];
       this.isLoading = true;
       this.response$ = from(
-        this.publicationService
+        this.pnlpService.pnlpClient
           .getArticle(publicationId, articleId)
           .catch((err) => (this.error = err.message || err))
           .finally(() => (this.isLoading = false))

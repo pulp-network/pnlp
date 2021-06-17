@@ -1,7 +1,27 @@
+import {
+  AuthorAddress,
+  EthereumAddress,
+  EthereumTransaction,
+  IpfsHash,
+  IpnsHash,
+  TransactionResult,
+} from '@app/model/ethereum';
+
+export interface PublicationRecord {
+  ipns_hash: IpfsHash;
+  author: EthereumAddress;
+  timestamp: Date;
+}
+
+export interface PublicationMetadata {
+  publication: Publication;
+  ipns_address: IpnsHash;
+  transaction: TransactionResult;
+}
+
 export interface Publication {
   slug: string;
-  editor: string;
-  founded: Date;
+  owner: AuthorAddress;
   name: string;
   description: string;
   articles: {
@@ -10,9 +30,9 @@ export interface Publication {
 }
 
 export interface ArticleSummary {
-  tx: string;
-  ipfs_address: string;
-  author: string;
+  tx: EthereumTransaction;
+  ipfs_address: IpfsHash;
+  author: EthereumAddress;
   title: string;
   subtitle: string;
   timestamp: Date;

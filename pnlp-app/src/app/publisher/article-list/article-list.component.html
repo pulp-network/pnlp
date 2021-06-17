@@ -24,7 +24,7 @@
         <div *ngIf="nerdMode$ | async" class="lead text-muted article-metadata">
           directory:
           <a [href]="ipnsUrl$ | async" target="_blank"
-            >ipns/{{ (metadata$ | async)?.ipns_hash?.value }}/{{ (publication$ | async)?.slug }}</a
+            >ipns/{{ (metadata$ | async)?.ipns_hash }}/{{ (publication$ | async)?.slug }}</a
           >
         </div>
       </div>

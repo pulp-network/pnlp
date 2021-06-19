@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PnlpService } from '@app/@core/pnlp/pnlp.service';
+import { Article } from '@app/model/article';
+import { ArticleSummary, Publication } from '@app/model/publication';
 import { from, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Article } from '../../model/article';
-import { ArticleSummary, Publication } from '../../model/publication';
 
 @Component({
   selector: 'app-article-view',

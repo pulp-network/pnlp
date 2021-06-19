@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { IdentityService } from '@app/@core/identity/identity.service';
 import { PnlpService } from '@app/@core/pnlp/pnlp.service';
-import { IdentityService } from '../../@core/identity/identity.service';
-import { ValidPublicationSlug } from '../../model/publication';
+import { ValidPublicationSlug } from '@app/model/publication';
 
 @Component({
   selector: 'app-new-publication',

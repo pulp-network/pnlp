@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PnlpService } from '@app/@core/pnlp/pnlp.service';
+import { Publication } from '@app/model/publication';
 import { providers } from 'ethers';
 import { from, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { BlockchainService, PublicationRecord } from '../../@core/persistence/blockchain.service';
 import { PreferencesService } from '../../@core/preferences/preferences.service';
-import { Publication } from '../../model/publication';
 
 @Component({
   selector: 'app-article-list',

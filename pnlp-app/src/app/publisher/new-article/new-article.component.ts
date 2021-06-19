@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PnlpService } from '@app/@core/pnlp/pnlp.service';
+import { Article, ValidArticleSlug } from '@app/model/article';
+import { Publication } from '@app/model/publication';
 import { from, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { IdentityService } from '../../@core/identity/identity.service';
-import { Article, ValidArticleSlug } from '../../model/article';
-import { Publication } from '../../model/publication';
 
 @Component({
   selector: 'app-new-article',

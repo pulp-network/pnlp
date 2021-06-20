@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Article, ArticleValidator } from '@app/model/article';
+import { Article, ArticleValidator } from '@app/model/entities/article';
+import { Publication, PublicationValidator } from '@app/model/entities/publication';
 import { IpfsHash, IpnsHash } from '@app/model/ethereum';
-import { Publication, PublicationValidator } from '@app/model/publication';
 import { Validator } from '@app/model/validation';
 import { BlockchainService, PublicationRecord, TransactionResult } from '../persistence/blockchain.service';
 import { PersistenceService } from '../persistence/persistence.service';

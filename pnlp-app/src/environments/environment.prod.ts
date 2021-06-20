@@ -10,6 +10,7 @@ export const environment = {
   hmr: false,
   version: '0.0.1',
   contractAddress: '0x6a9C839035ebb6FD46026E05a89759fF9a1d1db0',
+  network: 'mainnet',
   etherscanDomain: 'etherscan.io',
   serverUrl: '/api',
   defaultLanguage: 'en-US',

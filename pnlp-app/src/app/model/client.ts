@@ -1,7 +1,12 @@
-import { Article, ArticleValidator } from '@app/model/article';
 import { PnlpConstant } from '@app/model/constants';
+import { Article, ArticleValidator } from '@app/model/entities/article';
+import {
+  Publication,
+  PublicationMetadata,
+  PublicationRecord,
+  PublicationValidator,
+} from '@app/model/entities/publication';
 import { EnsName, EthereumAddress, IpfsHash, IpnsHash, TransactionResult } from '@app/model/ethereum';
-import { Publication, PublicationMetadata, PublicationRecord, PublicationValidator } from '@app/model/publication';
 import { Validator } from '@app/model/validation';
 
 export interface BlockchainService {
@@ -22,6 +27,10 @@ export interface IpfsService {
   resolveIpns(ipns_hash: IpnsHash): Promise<IpfsHash>;
 
   lsIpns(path: string): Promise<string[]>;
+}
+
+export interface SmtpService {
+  send(...args: any[]): Promise<any>; //TODO
 }
 
 /**

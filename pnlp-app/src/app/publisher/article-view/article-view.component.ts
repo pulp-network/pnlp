@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PnlpService } from '@app/@core/pnlp/pnlp.service';
-import { Article } from '@app/model/article';
-import { ArticleSummary, Publication } from '@app/model/publication';
+import { Article } from '@app/model/entities/article';
+import { ArticleSummary, Publication } from '@app/model/entities/publication';
 import { from, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 

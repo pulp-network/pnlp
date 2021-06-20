@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AboutComponent } from '@app/user/about/about.component';
 import { AuthenticationGuard } from './@core/identity/authentication.guard';
 import { HomeComponent } from './home/home.component';
 import { extract } from './i18n';
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent, data: { title: extract('Home') } },
   { path: 'sign-in', component: SignInComponent, data: { title: extract('Sign In') } },
+  { path: 'about', component: AboutComponent, data: { title: extract('About') } },
   { path: 'pnlp', component: PublicationListComponent, data: { title: extract('Publication') } },
   { path: 'pnlp/:publication_id', component: ArticleListComponent, data: { title: extract('pnlp') } },
   { path: 'pnlp/:publication_id/:article_id', component: ArticleViewComponent, data: { title: extract('pnlp') } },

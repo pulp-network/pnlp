@@ -10,6 +10,7 @@ export const environment = {
   hmr: false,
   version: '0.0.1',
   contractAddress: '0x88D632D0266CE47608FAE77ff4D37344FE562f12',
+  network: 'ropsten',
   etherscanDomain: 'ropsten.etherscan.io',
   serverUrl: '/api',
   defaultLanguage: 'en-US',

@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IdentityService } from '@app/@core/identity/identity.service';
 import { PnlpService } from '@app/@core/pnlp/pnlp.service';
-import { ValidPublicationSlug } from '@app/model/publication';
+import { ValidPublicationSlug } from '@app/model/entities/publication';
 
 @Component({
   selector: 'app-new-publication',

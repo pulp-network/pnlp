@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Article } from '@app/model/article';
-import { ArticleSummary } from '@app/model/publication';
+import { Article } from '@app/model/entities/article';
+import { ArticleSummary } from '@app/model/entities/publication';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';

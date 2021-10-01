@@ -1,5 +1,7 @@
 # pnlp
 
+_this version of pnlp is deprecated. it is the original version created for HackFS 2020 with modifications made later. [Demo here](https://www.youtube.com/watch?v=GibA0t0z_9w&t=1048s)_
+
 A First Implementation of the Permissionless Publishing Protocol
 
 pnlp is a decentralized application that serves as the reference implementation of the pulp protocol. pnlp lets authors publish content and manage subscribers in an author-centric manner.
